@@ -102,7 +102,15 @@ if errorlevel 1 (
     pause
     exit /b 1
 )
-call npx wrangler pages deploy dist --project-name=huay77
+REM --- --branch=main is required: Cloudflare Pages only marks a deployment
+REM     as "Production" (i.e. actually updates huay77.pages.dev) when its
+REM     branch matches the project's configured production branch ("main").
+REM     Without this flag, wrangler defaults to the CURRENT LOCAL git branch
+REM     ("master"/"github-main"/etc.) which is never "main", so every deploy
+REM     silently lands in "Preview" with its own throwaway URL and the live
+REM     site never updates. This exact thing happened and went unnoticed
+REM     until someone checked the live site against local changes.
+call npx wrangler pages deploy dist --project-name=huay77 --branch=main
 if errorlevel 1 (
     echo [ERROR] Cloudflare Pages deploy failed.
     pause
