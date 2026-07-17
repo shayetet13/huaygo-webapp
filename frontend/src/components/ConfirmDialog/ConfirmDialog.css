@@ -1,0 +1,109 @@
+/**
+ * @file components/ConfirmDialog/ConfirmDialog.css
+ * @module components/ConfirmDialog
+ * @description สไตล์ modal ยืนยัน/แจ้งเตือน — มินิมอล ขาว/น้ำเงิน กลางจอ
+ */
+
+.cfd-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, .45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 16px;
+  animation: cfd-fade .16s ease;
+}
+
+@keyframes cfd-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.cfd-box {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 380px;
+  padding: 26px 24px 20px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, .28);
+  animation: cfd-pop .2s cubic-bezier(.16, 1, .3, 1);
+}
+
+@keyframes cfd-pop {
+  from { transform: translateY(12px) scale(.96); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);   opacity: 1; }
+}
+
+/* ── Icon badge ── */
+.cfd-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+}
+.cfd-icon--danger  { background: #fef2f2; color: #dc2626; }
+.cfd-icon--primary { background: #eff6ff; color: var(--c-primary); }
+
+/* ── Text ── */
+.cfd-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--c-text);
+  margin-bottom: 6px;
+}
+.cfd-message {
+  font-size: var(--fs-md);
+  color: var(--c-muted);
+  line-height: 1.55;
+  margin-bottom: 22px;
+}
+
+/* ── Actions ── */
+.cfd-actions {
+  display: flex;
+  gap: 10px;
+}
+.cfd-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 9px;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-family: var(--font);
+  transition: background var(--t), border-color var(--t), opacity var(--t);
+}
+.cfd-btn--cancel {
+  background: #fff;
+  color: var(--c-muted);
+  border-color: #e2e8f0;
+}
+.cfd-btn--cancel:hover { background: #f8fafc; color: var(--c-text); }
+
+.cfd-btn--danger {
+  background: #dc2626;
+  color: #fff;
+}
+.cfd-btn--danger:hover { background: #b91c1c; }
+
+.cfd-btn--primary {
+  background: var(--c-primary);
+  color: #fff;
+}
+.cfd-btn--primary:hover { background: #1d4ed8; }
+
+@media (max-width: 480px) {
+  .cfd-box { max-width: 100%; border-radius: 14px; }
+}

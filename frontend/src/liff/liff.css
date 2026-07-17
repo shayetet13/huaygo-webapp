@@ -1,0 +1,1392 @@
+/* ═══════════════════════════════════════════════════════════════
+   LIFF customer app — design tokens + components
+   ปรับจาก lottery-ui-handoff/lottery-styles.css: ตัด phone-frame demo
+   ออก ใช้ full viewport จริงบนมือถือ (LIFF webview) แทน
+   ═══════════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap');
+
+/* ล็อก html/body ไม่ให้เป็นตัวเลื่อนเองตอนอยู่หน้า LIFF (:has ทำให้ scope เฉพาะตอนที่
+ * .liff-root ถูก mount อยู่จริง — ไม่กระทบหน้า staff/admin อื่นที่ยังใช้ document scroll
+ * ปกติ) เพราะแค่ .liff-root { overflow:hidden } เฉยๆ ไม่พอ: WKWebView ของ LINE ผูก
+ * elastic bounce ไว้กับ UIScrollView ของทั้งหน้าเว็บ (html/body) โดยตรง ถ้า body ยัง
+ * เป็น position:static + มีความสูงจริง (เช่นจาก #root { min-height:100vh } ใน
+ * globals.css ที่ยังใช้ vh ไม่ใช่ dvh มันจะสูงเกิน viewport จริงตอน address bar โผล่)
+ * มันก็ยังนับเป็น "หน้าเลื่อนได้" แล้วเด้ง bounce อยู่ดี แม้ .liff-root เองจะไม่ขยับ
+ * ก็ตาม — position:fixed ตัด body ออกจาก document flow เลย ทำให้ WKWebView ไม่มีอะไร
+ * ให้เลื่อน บังคับให้การเลื่อนทั้งหมดต้องเกิดใน .liff-body เท่านั้น */
+html:has(.liff-root),
+body:has(.liff-root) {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.liff-root {
+  /* Brand — ทอง (Casino Table) แทนเขียว LINE เดิม */
+  --c-brand:        #FFDE7A;
+  --c-brand-2:      #D9A62A;
+  --c-brand-dark:   #C79A2E;
+  --c-brand-soft:   rgba(255, 222, 122, 0.16);
+
+  /* Text — ขาว/ครีมทองสว่าง (คอนทราสต์สูงบนพื้นแดงเข้ม ตามที่ยืนยันแล้ว) */
+  --c-text:        #FFFFFF;
+  --c-text-muted:  #FFD98F;
+  --c-text-subtle: #C79A2E;
+
+  /* Surfaces */
+  --c-bg:        #220509;
+  --c-surface:   rgba(0, 0, 0, 0.32);
+  --c-border:    #A9781F;
+
+  /* Status */
+  --c-hot:       #E74C3C;
+  --c-cold:      #3B82F6;
+  --c-new:       #F59E0B;
+  --c-primary:   #1D7A52;
+  --c-danger:    #E74C3C;
+  --c-info:      #8B5CF6;
+  --c-success:   #1D7A52;
+
+  /* Radii */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-pill: 999px;
+
+  /* Shadows */
+  --sh-card:     0 2px 8px rgba(0, 0, 0, 0.35);
+  --sh-elevated: 0 8px 24px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.3);
+
+  font-family: 'Sarabun', 'Noto Sans Thai', system-ui, -apple-system, sans-serif;
+  color: var(--c-text);
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 214, 102, 0.045) 0 2px, transparent 2px 22px),
+    linear-gradient(180deg, #5C0F17 0%, #38090E 50%, #220509 100%);
+  /* height (ไม่ใช่ min-height) — กันเนื้อหายาวดันความสูงทั้งหน้าเกินจอ ซึ่งจะทำให้
+   * ทั้งหน้า (ไม่ใช่แค่ .liff-body) เลื่อนได้ แล้วโดน elastic overscroll bounce ของ
+   * เบราว์เซอร์มือถือดึงพื้นหลังยืดตามตอนเลื่อนสุดบน/ล่าง — ต้องบังคับสูงเท่าจอเป๊ะ
+   * ให้ .liff-body (overflow-y:auto) เป็นตัวเลื่อนแทน ไม่ใช่ทั้งหน้า */
+  height: 100dvh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  position: relative;
+}
+.liff-root * { box-sizing: border-box; }
+.liff-root button { font-family: inherit; }
+
+/* ── App header ─────────────────────────────────── */
+.liff-header {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  padding: 8px 12px;
+  background: #38090E;
+  border-bottom: 2px solid var(--c-brand-dark);
+  min-height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.liff-title {
+  margin: 0;
+  font-size: 16px; font-weight: 800;
+  text-align: center;
+  letter-spacing: -0.2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: #FFDE7A;
+}
+.ic-btn {
+  width: 40px; height: 40px;
+  border: 0; background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--c-text);
+  display: grid; place-items: center;
+  font-size: 22px;
+  transition: background 0.15s;
+}
+.ic-btn:active { background: rgba(255,255,255,0.12); }
+.ic-btn svg { width: 22px; height: 22px; }
+
+/* ตะกร้าในหัวข้อ — โชว์เฉพาะตอนมีของค้าง ไม่ใช่ของใน handoff แต่มีประโยชน์จริง
+ * (ให้กลับไปดูตะกร้าได้จากทุกหน้าโดยไม่ต้องกด "ไปตะกร้า" ทีละหน้า) */
+.header-cart-btn { position: relative; width: 44px; color: var(--c-brand); }
+.header-cart-count {
+  position: absolute; top: 2px; right: 2px;
+  background: #E74C3C;
+  color: #fff;
+  font-size: 10px; font-weight: 800;
+  min-width: 16px; height: 16px;
+  border-radius: var(--r-pill);
+  padding: 0 4px;
+  display: grid; place-items: center;
+  box-shadow: 0 0 0 2px #38090E;
+}
+.link-btn {
+  color: var(--c-brand);
+  font-size: 13px; font-weight: 700;
+  background: transparent; border: 0; cursor: pointer;
+  padding: 8px 4px;
+}
+
+/* ── Screen body ────────────────────────────────── */
+.liff-body {
+  flex: 1;
+  padding: 14px 16px 90px; /* เผื่อที่ให้ bottom nav */
+  overflow-y: auto;
+  /* กัน rubber-band bounce ตอนเลื่อนสุดบน/ล่างแบบเร็ว (fling) — ย้าย scroll มาไว้ที่
+   * .liff-body แล้ว (แทน document) แต่ตัว .liff-body เองก็เป็น overflow:auto ที่โดน
+   * elastic overscroll ของตัวเองได้อีกชั้น ต้อง contain ไว้ไม่ให้ยืด/ไม่ให้ chain
+   * scroll ต่อไปยัง parent ด้วย */
+  overscroll-behavior-y: contain;
+}
+.screen-title {
+  font-size: 19px; font-weight: 800;
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+.screen-sub {
+  font-size: 13px;
+  color: var(--c-text-muted);
+  margin: 0 0 14px;
+  font-weight: 500;
+}
+.ctx-line, .date-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  font-size: 12px; font-weight: 600;
+  margin-bottom: 12px;
+  box-shadow: var(--sh-card);
+}
+
+/* ── Screen 1: type grid ─────────────────────────── */
+.lottery-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.lottery-card {
+  position: relative;
+  background: var(--c-surface);
+  border: 2px solid transparent;
+  border-radius: var(--r-md);
+  padding: 12px;
+  text-align: left;
+  display: grid;
+  gap: 4px;
+  cursor: pointer;
+  box-shadow: var(--sh-card);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lottery-card:active { transform: translateY(1px); }
+.lottery-card .lottery-ic {
+  width: 40px; height: 40px;
+  border-radius: var(--r-sm);
+  display: grid; place-items: center;
+  background: radial-gradient(circle at 30% 30%, #FFDE7A, #8A6416);
+  overflow: hidden;
+}
+.lottery-card .lottery-ic svg { width: 100%; height: 100%; display: block; }
+.lottery-card .lottery-ic.is-icon { color: #2B0705; padding: 7px; }
+.lottery-card .lottery-ic.is-flag { padding: 0; }
+.lottery-name { font-weight: 700; font-size: 14px; color: #FFFFFF; }
+.lottery-desc { font-size: 11px; color: var(--c-text-muted); font-weight: 500; }
+.lottery-card.is-selected {
+  border-color: var(--c-brand);
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 200%);
+  box-shadow: 0 4px 16px rgba(255, 222, 122, 0.25);
+}
+.check-pill {
+  position: absolute; top: 8px; right: 8px;
+  background: linear-gradient(135deg, #FFDE7A 0%, #D9A62A 100%);
+  color: #2B0705;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  box-shadow: 0 2px 6px rgba(255, 222, 122, 0.5);
+}
+.check-pill svg { width: 12px; height: 12px; }
+.badge-corner {
+  position: absolute; top: 8px; right: 8px;
+  font-size: 9px; font-weight: 800;
+  padding: 3px 7px;
+  border-radius: var(--r-pill);
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+.badge-corner.danger { background: #C0392B; }
+.badge-corner.warn   { background: #D9A62A; color: #2B0705; }
+
+/* ── Screen 2: option list ───────────────────────── */
+.opt-list { list-style: none; margin: 0; padding: 0; }
+.opt-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center; gap: 12px;
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+.opt-row:disabled { opacity: 0.55; cursor: not-allowed; }
+.opt-row.is-selected {
+  border-color: var(--c-brand);
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 250%);
+  box-shadow: 0 2px 8px rgba(255, 222, 122, 0.18);
+}
+.opt-ic {
+  width: 44px; height: 44px;
+  background: radial-gradient(circle at 30% 30%, #FFDE7A, #8A6416);
+  border-radius: var(--r-md);
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+.opt-ic img { width: 100%; height: 100%; object-fit: cover; }
+.opt-ic svg { width: 24px; height: 24px; color: #2B0705; }
+.opt-text { display: grid; gap: 2px; }
+.opt-text b { font-size: 14px; font-weight: 700; color: #FFFFFF; }
+.opt-text small { font-size: 12px; color: var(--c-text-muted); font-weight: 500; }
+.opt-chev { color: var(--c-text-subtle); font-size: 22px; line-height: 1; }
+.opt-state {
+  font-size: 10px; font-weight: 700;
+  padding: 3px 8px; border-radius: var(--r-pill);
+}
+.opt-state.open    { background: rgba(29, 122, 82, 0.3); color: #4ADE80; }
+.opt-state.closing { background: rgba(217, 166, 42, 0.3); color: #FFDE7A; }
+.opt-state.closed, .opt-state.notopen { background: rgba(0,0,0,0.3); color: var(--c-text-subtle); }
+
+/* ── Screen 3: format grid ───────────────────────── */
+.fmt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.fmt-card {
+  position: relative;
+  background: var(--c-surface);
+  border: 2px solid transparent;
+  border-radius: var(--r-md);
+  padding: 14px 8px 12px;
+  text-align: center;
+  display: grid;
+  gap: 5px;
+  justify-items: center;
+  cursor: pointer;
+  box-shadow: var(--sh-card);
+  transition: all 0.2s;
+}
+.fmt-card:active { transform: translateY(1px); }
+.fmt-card.is-selected {
+  border-color: var(--c-brand);
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 250%);
+  box-shadow: 0 4px 12px rgba(255, 222, 122, 0.22);
+}
+.fmt-badge {
+  display: inline-block;
+  font-size: 12px; font-weight: 800;
+  padding: 4px 12px;
+  border-radius: var(--r-pill);
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+.fmt-badge.primary { background: #1D7A52; }
+.fmt-badge.danger  { background: #C0392B; }
+.fmt-badge.info    { background: #6B4FBB; }
+.fmt-name { font-weight: 700; font-size: 13px; color: #FFFFFF; }
+.fmt-price { font-size: 11px; color: var(--c-text-muted); font-weight: 500; }
+
+/* วิ่งบน/วิ่งล่าง — วงกลมไอคอนลูกศรแทนป้ายข้อความ (แยกจากรูปแบบอื่นด้วยรูปทรง ไม่ใช่แค่สี
+ * ช่วยให้กวาดตาเจอ "วิ่ง" ได้เร็วขึ้นโดยไม่ต้องอ่านตัวอักษร — จิตวิทยาการรับรู้รูปทรง) */
+.fmt-ic {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.fmt-ic svg { width: 20px; height: 20px; }
+.fmt-ic.is-up   { background: rgba(29, 122, 82, 0.35); color: #4ADE80; }
+.fmt-ic.is-down { background: rgba(231, 76, 60, 0.3); color: #FF6B5B; }
+
+/* ── Screen 4: digits + keypad ───────────────────── */
+.digit-display {
+  display: flex; gap: 8px; align-items: center;
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: var(--sh-card);
+}
+.digit-slot {
+  flex: 1; height: 64px;
+  display: grid; place-items: center;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  font-size: 32px; font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #FFFFFF;
+}
+.digit-slot.filled { border-color: var(--c-brand); background: rgba(255, 222, 122, 0.14); color: #FFDE7A; }
+.digit-clear {
+  width: 40px; height: 40px;
+  border: 0; background: rgba(0, 0, 0, 0.32);
+  border-radius: 50%;
+  color: var(--c-text-muted);
+  cursor: pointer;
+  display: grid; place-items: center;
+}
+.digit-clear svg { width: 18px; height: 18px; }
+.digit-clear:active { background: rgba(0, 0, 0, 0.5); }
+
+.freq-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin: 8px 0 8px;
+}
+.freq-title { font-weight: 700; font-size: 13px; color: #FFFFFF; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+.chip {
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  padding: 7px 16px;
+  border-radius: var(--r-pill);
+  font-size: 13px; font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #FFFFFF;
+}
+.chip.is-selected {
+  background: linear-gradient(135deg, #FFDE7A 0%, #D9A62A 100%);
+  border-color: transparent;
+  color: #2B0705;
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 12px 0;
+}
+.keypad button {
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 15px 0;
+  font-size: 20px; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+  transition: all 0.1s;
+  display: grid; place-items: center;
+  color: #FFFFFF;
+}
+.keypad button:active {
+  transform: scale(0.95);
+  background: rgba(0, 0, 0, 0.5);
+}
+.kp-action { background: rgba(0,0,0,0.45) !important; font-size: 13px !important; font-weight: 600 !important; color: var(--c-text-muted) !important; }
+.kp-action svg { width: 22px; height: 22px; }
+.kp-zero { grid-column: span 2; }
+.kp-random { grid-column: span 2; }
+
+/* ── Quick-mode grid — เลือกรูปแบบแทงเร็ว 6 แบบ (2ตัว/3ตัว/6กลับ/19ประตู/เลขวิ่ง/วินเลข)
+ * จัดเป็นกริด 3 คอลัมน์ × 2 แถว แทน .tabs แถวเดียวเลื่อนแนวนอนเดิม — 6 รายการยาวเกินจอ
+ * เลื่อนดูแล้วมองไม่เห็นครบ ทำให้ไม่รู้ว่ามีตัวเลือกอื่นซ่อนอยู่ กริด 2 แถวเห็นครบทุกตัวทันที */
+.mode-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.mode-btn {
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 10px 4px;
+  font-size: 13px; font-weight: 700;
+  color: var(--c-text);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+.mode-btn.is-active {
+  background: linear-gradient(135deg, #FFDE7A 0%, #D9A62A 100%);
+  color: #2B0705;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(255, 222, 122, 0.35);
+}
+
+/* ── Amount card — รวมช่องราคา "บน"+"ล่าง" ไว้ในกล่องเดียว แต่ละแถวมีแถบสีข้างซ้าย
+ * (ทอง=บน, เงิน=ล่าง) ให้แยกด้วยสายตาได้ทันทีโดยไม่ต้องอ่าน label — เดิมสองแถวหน้าตา
+ * เหมือนกันเป๊ะ ต้องอ่านข้อความถึงจะรู้ว่าอันไหนเป็นอันไหน */
+.amt-card {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.4) 100%);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 4px 14px;
+  margin: 4px 0 10px;
+  box-shadow: var(--sh-card);
+}
+.amt-row {
+  padding: 14px 0 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-left: 3px solid transparent;
+}
+.amt-row--bon { border-left-color: var(--c-brand); }
+.amt-row--lon { border-left-color: #C9C9C9; }
+.amt-row + .amt-row { border-top: 1px dashed rgba(255, 255, 255, 0.12); }
+.amt-row-input-row { display: flex; align-items: center; gap: 8px; }
+.stake-label-badge {
+  font-size: 12.5px;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+.stake-badge-bon { background: rgba(255, 222, 122, 0.16); color: var(--c-brand); border: 1px solid rgba(255, 222, 122, 0.45); }
+.stake-badge-lon { background: rgba(255, 255, 255, 0.08); color: #E4E4E4; border: 1px solid rgba(255, 255, 255, 0.22); }
+.amt-row-input {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  min-width: 0;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-sm);
+  padding: 0 10px;
+}
+.stake-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 8px 0;
+  font-size: 17px; font-weight: 800; /* >=16px กัน iOS Safari/webview auto-zoom ตอน focus input */
+  font-family: inherit;
+  text-align: right;
+  color: var(--c-text);
+}
+.stake-input:focus { outline: none; }
+.stake-input-suffix { font-size: 13px; font-weight: 700; color: var(--c-text-muted); margin-left: 4px; flex-shrink: 0; }
+.stake-clear {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  border: 1.5px solid var(--c-border);
+  background: rgba(0, 0, 0, 0.32);
+  border-radius: 50%;
+  color: var(--c-text-muted);
+  cursor: pointer;
+  display: grid; place-items: center;
+}
+.stake-clear svg { width: 15px; height: 15px; }
+.stake-clear:active { background: rgba(0, 0, 0, 0.5); }
+.amt-row-chips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.stake-quick {
+  border: 1.5px solid var(--c-border);
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: var(--r-sm);
+  padding: 8px 2px;
+  font-size: 12.5px; font-weight: 700;
+  cursor: pointer;
+  color: #FFFFFF;
+  text-align: center;
+  transition: all 0.12s;
+}
+.stake-quick.is-selected { background: linear-gradient(135deg, #FFDE7A 0%, #D9A62A 100%); color: #2B0705; border-color: transparent; box-shadow: 0 2px 6px rgba(255, 222, 122, 0.35); }
+
+/* ── Cart ─────────────────────────────────────────── */
+.tabs { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  color: var(--c-text-muted);
+}
+.tab.is-active {
+  background: linear-gradient(135deg, #FFDE7A 0%, #D9A62A 100%);
+  color: #2B0705; border-color: transparent;
+  box-shadow: 0 2px 8px rgba(255, 222, 122, 0.4);
+}
+/* ตัวกรองที่มีจำนวนรายการไม่แน่นอน (เช่นแท็บสถานะโพยของฉัน) — ห่อบรรทัดอัตโนมัติแทน
+ * เลื่อนแนวนอนของ .tabs ด้านบน กันไม่ให้ตัวเลือกท้ายๆ ตกขอบจอมองไม่เห็น */
+.filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.cart-item {
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  box-shadow: var(--sh-card);
+}
+.ci-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px; gap: 8px;
+}
+.badge-soft {
+  font-size: 12px; font-weight: 800;
+  padding: 4px 10px;
+  border-radius: var(--r-sm);
+  color: #fff;
+}
+.badge-soft.primary { background: #1D7A52; }
+.badge-soft.danger  { background: #C0392B; }
+.badge-soft.info    { background: #6B4FBB; }
+.ci-price { font-size: 12px; color: var(--c-text-muted); font-weight: 600; margin-left: auto; }
+.ci-remove {
+  background: transparent; border: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--c-text-subtle);
+  display: grid; place-items: center;
+}
+.ci-remove svg { width: 14px; height: 14px; }
+.ci-remove:active { background: rgba(231, 76, 60, 0.3); color: var(--c-danger); }
+.chip-static {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--c-border);
+  padding: 6px 14px;
+  border-radius: var(--r-pill);
+  font-size: 13px; font-weight: 800;
+  margin: 0 6px 6px 0;
+  color: #FFFFFF;
+}
+.chip-static small { font-weight: 600; color: var(--c-text-muted); }
+.cart-total {
+  display: flex; justify-content: space-between; align-items: center;
+  margin: 14px 0 4px;
+  font-size: 14px; font-weight: 600;
+  color: var(--c-text-muted);
+}
+.cart-total b { font-size: 18px; color: var(--c-text); font-weight: 800; }
+.cart-total.big {
+  font-size: 15px; color: var(--c-text);
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.32);
+  border-radius: var(--r-md);
+  border: 1.5px solid var(--c-brand-dark);
+  margin-top: 14px;
+}
+.cart-total.big b {
+  font-size: 24px;
+  color: #FFDE7A;
+  font-weight: 900;
+}
+
+/* ── Buttons ──────────────────────────────────────── */
+.btn-primary, .btn-secondary {
+  width: 100%;
+  border: 0;
+  border-radius: var(--r-pill);
+  padding: 15px 22px;
+  font-size: 15px; font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #FFDE7A 0%, #D9A62A 100%);
+  color: #2B0705;
+  box-shadow: 0 6px 16px rgba(255, 222, 122, 0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.btn-primary:disabled { opacity: 0.5; box-shadow: none; }
+.btn-primary:active { transform: translateY(1px); }
+.btn-secondary {
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-brand);
+  color: #FFDE7A;
+}
+.cta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.cta-row .btn-primary, .cta-row .btn-secondary { margin-top: 0; }
+
+/* ── Success screen ───────────────────────────────────────────
+   พื้นหลัง "สวยๆ" ใช้ layered radial gradient ล้วน (ไม่พึ่งรูปภาพจริง — เลี่ยง
+   external asset/CDN ตาม convention ของโปรเจกต์) จำลอง bokeh + แสงพระอาทิตย์ตก
+   สี: เขียวเข้ม→เขียวสด (โทน "สำเร็จ/เงิน") แต้มทองสั้นๆ (โทน "รางวัล/โชคดี")
+   — นี่คือส่วนที่ตอบโจทย์ "สีสันทางจิตวิทยา": เขียว = ไว้ใจ/เงิน, ทอง = โชค/รางวัล ── */
+.success-header {
+  /* padding-top เผื่อ safe-area (notch/status bar ใน LINE webview) — เดิม 16px แน่นเกินไป
+   * ข้อความเลยดูโดนอัดชิดขอบบนสุดจนอ่านลำบาก */
+  padding: max(28px, calc(env(safe-area-inset-top) + 20px)) 16px 84px;
+  background:
+    radial-gradient(ellipse 140% 60% at 15% -10%, rgba(255,255,255,0.14) 0%, transparent 55%),
+    radial-gradient(circle at 82% 15%, rgba(255, 222, 122, 0.4) 0%, transparent 32%),
+    radial-gradient(circle at 12% 78%, rgba(217, 166, 42, 0.3) 0%, transparent 38%),
+    radial-gradient(ellipse at top right, rgba(255, 222, 122, 0.3) 0%, transparent 50%),
+    linear-gradient(160deg, #5C0F17 0%, #38090E 55%, #220509 100%);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+/* sunburst rays — แสงพวยพุ่งจากกึ่งกลางด้านบนหมุนช้าๆ เสริมความรู้สึก "รางวัล" ให้พื้นหลัง
+ * มีมิติกว่าแค่ gradient เรียบๆ (mask ให้จางออกด้านนอก ไม่ให้แสงเต็มขอบจนแข็งกระด้าง) */
+.success-header::before {
+  content: '';
+  position: absolute;
+  top: -30%; left: 50%;
+  width: 280%; height: 220%;
+  transform: translateX(-50%);
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(255, 222, 122, 0.12) 0deg 8deg,
+    transparent 8deg 20deg
+  );
+  -webkit-mask-image: radial-gradient(ellipse 55% 50% at 50% 18%, #000 0%, transparent 72%);
+          mask-image: radial-gradient(ellipse 55% 50% at 50% 18%, #000 0%, transparent 72%);
+  animation: sunburst-spin 50s linear infinite;
+  pointer-events: none;
+}
+@keyframes sunburst-spin { to { transform: translateX(-50%) rotate(360deg); } }
+.success-header::after {
+  /* sparkle dots — จุดแสงกระพริบเบาๆ ให้พื้นหลังมีชีวิตชีวาไม่แบนราบ */
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.9), transparent),
+    radial-gradient(2px 2px at 68% 18%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1.5px 1.5px at 85% 55%, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1.5px 1.5px at 35% 65%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2px 2px at 55% 40%, rgba(252,211,77,0.9), transparent);
+  animation: sparkle-twinkle 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes sparkle-twinkle {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+.success-header h1 {
+  margin: 0; font-size: 20px; font-weight: 800; position: relative; z-index: 2;
+  text-shadow: 0 2px 12px rgba(255, 222, 122, 0.35);
+}
+.success-body {
+  padding: 0 16px 90px;
+  flex: 1;
+  margin-top: -56px;
+  position: relative;
+  z-index: 3;
+  /* หน้านี้ไม่ได้ใช้ .liff-body (ตัวเลื่อนหลักของหน้าอื่นๆ) เลย ใช้ .success-header +
+   * .success-body เป็นโครงของตัวเอง — พอ .liff-root ถูกล็อค overflow:hidden (กัน elastic
+   * bounce ตอนเลื่อนสุดของทั้งหน้า) ไปก่อนหน้านี้ เลยลืมเปิด overflow-y ให้กล่องนี้ด้วย ผลคือ
+   * โพยยาวๆ (รายการเยอะ) เนื้อหาส่วนล่างรวมถึงปุ่ม "เสร็จสิ้น" โดนตัดพ้นจอ เลื่อนลงไปกดไม่ถึงเลย */
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
+.success-bubble {
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  background: #fff;
+  border: 4px solid #fff;
+  display: grid; place-items: center;
+  margin: 0 auto 12px;
+  box-shadow: 0 0 0 4px rgba(255, 222, 122, 0.3), 0 12px 32px rgba(255, 222, 122, 0.45);
+  animation: success-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+.success-bubble svg { width: 50px; height: 50px; }
+/* วงแหวนประไข่ปลาหมุนรอบ — เอฟเฟคเล็กๆ เสริมความรู้สึก "เสร็จสมบูรณ์/มีพลัง" */
+.success-bubble::before {
+  content: '';
+  position: absolute; inset: -8px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 222, 122, 0.5);
+  animation: success-spin 8s linear infinite;
+}
+.success-bubble.is-fail { color: var(--c-danger); box-shadow: 0 0 0 4px rgba(231,76,60,0.25), 0 12px 32px rgba(231,76,60,0.35); }
+.success-bubble.is-fail::before { border-color: rgba(239,68,68,0.35); }
+@keyframes success-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes success-spin { to { transform: rotate(360deg); } }
+.confetti {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 240px;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+.confetti span {
+  position: absolute;
+  left: var(--x, 50%);
+  top: -20px;
+  font-size: 15px;
+  color: var(--c, #FBBF24);
+  transform: rotate(var(--r, 0deg));
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+  animation: confetti-fall 2.4s ease-in var(--d, 0s) infinite;
+}
+@keyframes confetti-fall {
+  0%   { transform: translateY(-20px) rotate(var(--r, 0deg)); opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateY(240px) rotate(calc(var(--r, 0deg) + 360deg)); opacity: 0; }
+}
+.section-title {
+  font-size: 15px; font-weight: 800; margin: 18px 0 10px;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  display: flex; align-items: center; gap: 6px;
+}
+.section-title::before { content: '♦'; color: var(--c-brand); font-size: 13px; }
+.section-title.first { margin-top: 0; }
+.section-caption { font-size: 11px; color: var(--c-text-muted); font-weight: 500; margin: -6px 0 10px; }
+
+/* home-panel — รวม "ตลาดใกล้ปิดรับ" + "เลขเด็ดวันนี้" ไว้กล่องเดียวกัน (หน้าหลัก LIFF)
+ * ให้อ่านเป็นโมดูล "ตัดสินใจเล่นตอนนี้" เดียวกัน แทนที่จะเป็น section ลอยแยกกันคนละที่ */
+.home-panel {
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-lg);
+  padding: 14px 14px 4px;
+  margin-bottom: 20px;
+  box-shadow: var(--sh-card);
+}
+.home-panel-divider { border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 6px 0 4px; }
+.success-warn {
+  background: rgba(0, 0, 0, 0.32); border: 1px solid var(--c-brand-dark);
+  color: #FFDE7A; font-size: 12px; font-weight: 600;
+  border-radius: var(--r-md); padding: 10px 12px; margin-top: 10px;
+}
+.inline-ic { width: 14px; height: 14px; vertical-align: -2px; }
+
+/* ── Bottom nav ───────────────────────────────────── */
+.bottom-nav {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #2B070B;
+  border-top: 2px solid var(--c-brand-dark);
+  padding: 8px 0 max(14px, env(safe-area-inset-bottom));
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  z-index: 30;
+}
+.bn-item {
+  background: transparent; border: 0;
+  display: grid; gap: 2px; place-items: center;
+  font-size: 11px; color: #E8B978;
+  cursor: pointer;
+  padding: 4px 0;
+}
+.bn-item .bn-ic { width: 21px; height: 21px; }
+.bn-item span { font-weight: 600; }
+.bn-item.is-active { color: var(--c-brand); }
+.bn-item.is-active span { font-weight: 800; }
+.bn-item:disabled { color: #7A4F2A; }
+
+/* ── Full-screen states (loading / error / onboarding) ── */
+.liff-center {
+  flex: 1;
+  display: grid; place-items: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+.liff-center .big-ic { width: 44px; height: 44px; margin: 0 auto 10px; color: var(--c-danger); }
+.liff-spinner {
+  width: 38px; height: 38px;
+  border: 4px solid var(--c-border);
+  border-top-color: var(--c-brand);
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  animation: liff-spin 0.8s linear infinite;
+}
+@keyframes liff-spin { to { transform: rotate(360deg); } }
+
+.onboard-card {
+  width: 100%;
+  background: var(--c-surface);
+  border-radius: var(--r-lg);
+  padding: 24px 20px;
+  box-shadow: var(--sh-elevated);
+}
+.onboard-card h2 { margin: 0 0 4px; font-size: 18px; font-weight: 800; }
+.onboard-card p { margin: 0 0 16px; font-size: 13px; color: var(--c-text-muted); }
+.field { margin-bottom: 12px; text-align: left; }
+.field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+.field input {
+  width: 100%;
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  font-size: 16px; /* >=16px กัน iOS Safari/webview auto-zoom ตอน focus input */
+  font-family: inherit;
+  background: rgba(0, 0, 0, 0.32);
+  color: #FFFFFF;
+}
+.field input::placeholder { color: #8A6B3D; }
+.field input:focus { outline: none; border-color: var(--c-brand); }
+.form-err { color: var(--c-danger); font-size: 12px; font-weight: 600; margin: 4px 0 0; }
+
+/* ── Home / wallet summary ────────────────────────── */
+.stat-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-brand-dark);
+  border-radius: var(--r-md);
+  padding: 14px;
+  box-shadow: var(--sh-card);
+}
+.stat-card .stat-label { font-size: 12px; color: var(--c-text-muted); font-weight: 700; }
+.stat-card .stat-value { font-size: 22px; font-weight: 800; margin-top: 2px; color: #FFFFFF; }
+.stat-card.green .stat-value { color: #FFFFFF; }
+/* การ์ด "ยอดถูกรางวัล" เป็น <button> กดได้ (เปิดโพยของฉันกรอง "ถูกรางวัล" ตรงๆ) — รีเซ็ต
+ * ค่า default ของ <button> (width/appearance) ให้หน้าตาเหมือน .stat-card การ์ดอื่นทุกจุด */
+.stat-card.is-tappable {
+  width: 100%;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s;
+}
+.stat-card.is-tappable:active { transform: translateY(1px); }
+
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  padding: 18px 16px;
+  margin-bottom: 16px;
+  color: #fff;
+  background-image: url('/hero-bg2.webp');
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+.hero-card h2, .hero-card .hero-greet { margin: 0 0 3px; font-size: 18px; font-weight: 800; color: #FFFFFF; position: relative; z-index: 1; }
+.hero-card p { margin: 0 0 12px; font-size: 13px; color: #FFE3A3; font-weight: 600; position: relative; z-index: 1; }
+.hero-card .hero-shop-name { margin-bottom: 6px; font-size: 13px; font-weight: 700; color: #FFFFFF; opacity: 0.95; letter-spacing: 0.2px; }
+.hero-card .hero-date { margin-bottom: 12px; }
+.hero-tagline {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 7px;
+  margin: 0 0 10px;
+  font-size: 11.5px; font-weight: 700;
+  color: var(--c-brand);
+  letter-spacing: 0.3px;
+}
+.hero-tagline .tag-dot {
+  width: 3px; height: 3px; border-radius: 50%;
+  background: var(--c-brand-dark);
+  flex: none;
+}
+
+/* ── ปุ่ม "คีย์หวยเลย" ทรงหกเหลี่ยมปลายแหลม สร้างด้วย CSS ล้วน ไม่ใช้ button.png ──
+ * (button.png มีคำว่า "คีย์หวยตอนนี้" ฝังพิกเซลอยู่แล้ว ผิดทั้งคำและผิดกฎ "ห้ามข้อความเป็นรูป")
+ * ชั้นนอก = gradient ทอง + clip-path หกเหลี่ยม, ชั้นใน (padding 3px ชั้นนอก) = พื้นดำ ให้เห็น
+ * เป็น "กรอบทอง" ล้อมรอบ โดยไม่ต้องพึ่ง border-image ซึ่ง clip-path ไม่รองรับ */
+.hero-cta-vip {
+  position: relative; z-index: 1;
+  display: block; width: 100%;
+  margin-top: 2px;
+  padding: 3px;
+  border: 0;
+  background: linear-gradient(135deg, #FFF3C4, #FFDE7A 35%, #A97C1E 70%, #FFEBA8);
+  clip-path: polygon(3% 0%, 97% 0%, 100% 50%, 97% 100%, 3% 100%, 0% 50%);
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+.hero-cta-vip:active { transform: scale(0.98); filter: brightness(0.92); }
+.hero-cta-vip-face {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  height: 46px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #232323 0%, #050505 60%, #0d0d0d 100%);
+  clip-path: polygon(3% 0%, 97% 0%, 100% 50%, 97% 100%, 3% 100%, 0% 50%);
+}
+.hero-cta-vip-face::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.10) 50%, transparent 60%);
+}
+.hero-cta-vip-label {
+  position: relative; z-index: 1;
+  font-size: 15.5px; font-weight: 800; letter-spacing: 0.2px;
+  background: linear-gradient(180deg, #FFF3C4, #FFDE7A 45%, #C79A2E);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* ── Home entrance motion — "การ์ดถูกแจก" ทีเดียวตอนเข้าหน้าแรก ไม่ใช่ fade generic ── */
+@media (prefers-reduced-motion: no-preference) {
+  .liff-home-header { animation: liffHeaderSlide 0.45s ease both; }
+  .liff-home-body > .hero-card { animation: heroCardDeal 0.65s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .liff-home-body > *:not(.hero-card) { animation: liffFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .liff-home-body > *:nth-child(2) { animation-delay: 0.16s; }
+  .liff-home-body > *:nth-child(3) { animation-delay: 0.22s; }
+  .liff-home-body > *:nth-child(4) { animation-delay: 0.28s; }
+  .liff-home-body > *:nth-child(n+5) { animation-delay: 0.34s; }
+  .hero-wave {
+    display: inline-block;
+    transform-origin: 70% 70%;
+    animation: waveHand 1.4s ease-in-out 0.55s 2;
+  }
+}
+@keyframes liffHeaderSlide {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes liffFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroCardDeal {
+  0%   { opacity: 0; transform: perspective(900px) rotateX(20deg) translateY(26px) scale(0.92); box-shadow: 0 10px 28px rgba(0, 0, 0, 0); }
+  60%  { opacity: 1; }
+  78%  { transform: perspective(900px) rotateX(0deg) translateY(0) scale(1.015); box-shadow: 0 0 22px rgba(255, 222, 122, 0.4), 0 10px 28px rgba(0, 0, 0, 0.45); }
+  100% { opacity: 1; transform: perspective(900px) rotateX(0deg) translateY(0) scale(1); box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45); }
+}
+@keyframes waveHand {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(18deg); }
+  75%      { transform: rotate(-10deg); }
+}
+
+/* ── Slips list ───────────────────────────────────── */
+.slip-empty {
+  text-align: center;
+  color: var(--c-text-muted);
+  padding: 48px 16px;
+  font-size: 14px; font-weight: 500;
+}
+.slip-empty .big-ic { width: 40px; height: 40px; display: block; margin: 0 auto 8px; color: var(--c-text-subtle); }
+.slip-status {
+  font-size: 11px; font-weight: 800;
+  padding: 3px 10px; border-radius: var(--r-pill);
+  margin-left: auto;
+}
+.slip-status.pending   { background: rgba(217, 166, 42, 0.3); color: #FFDE7A; }
+.slip-status.win       { background: rgba(29, 122, 82, 0.3); color: #4ADE80; }
+.slip-status.lose      { background: rgba(0,0,0,0.3); color: var(--c-text-subtle); }
+.slip-status.cancelled { background: rgba(0,0,0,0.3); color: var(--c-text-subtle); text-decoration: line-through; }
+.slip-status.refunded  { background: rgba(139, 92, 246, 0.25); color: #C4B5FD; }
+.slip-meta { font-size: 11px; color: var(--c-text-subtle); font-weight: 500; margin-top: 6px; }
+.slip-del {
+  background: transparent;
+  border: 1.5px solid #C0392B;
+  color: var(--c-danger);
+  border-radius: var(--r-pill);
+  font-size: 12px; font-weight: 700;
+  padding: 5px 14px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+.slip-del:disabled { opacity: 0.5; }
+
+/* โพยของฉัน — การ์ดต่อ 1 บิล ใช้กรอบทองธรรมดาเหมือนการ์ดจุดอื่นๆ ในแอป (.cart-item ฯลฯ)
+ * ไม่ใช้แถบสีซ้ายแยกสถานะ — badge สถานะ (.slip-status) บอกอยู่แล้ว ไม่ต้องซ้ำซ้อน */
+.slip-card {
+  position: relative;
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  box-shadow: var(--sh-card);
+}
+.slip-card.st-lose      { opacity: 0.82; }
+.slip-card.st-cancelled { opacity: 0.7; }
+.slip-card-hd { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.slip-card-market { font-size: 13px; font-weight: 700; color: #FFFFFF; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.slip-card-body { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.slip-card-win { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; color: #4ADE80; margin-top: 6px; }
+/* สถานะจ่ายเงินรางวัล — เขียว "จ่ายแล้ว" (โทนเดียวกับ .slip-status.win) vs ทองทึบ "ยังไม่ได้รับเงิน"
+ * (โทนเดียวกับ .badge-corner.warn) ให้ตัวที่ยังค้างจ่ายเด่นชัดกว่าตัวที่จบแล้ว ดึงสายตาว่าต้องรอ */
+.slip-pay-status {
+  font-size: 10px; font-weight: 800;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+.slip-pay-status.is-paid   { background: rgba(29, 122, 82, 0.3); color: #4ADE80; }
+.slip-pay-status.is-unpaid { background: #D9A62A; color: #2B0705; }
+
+/* โพยที่ "ถูกรางวัล" — ไล่ทั้งการ์ดเป็นเขียวเข้ม (ยังอยู่ในธีม Casino Table: เขียว=เงิน/ไว้ใจ
+ * ทองเข้ามาเสริมเฉพาะยอดเงินที่ได้ ให้เด่นสุดในสายตา) ทุก element ลูกข้างในต้องปรับสีแยกทับ
+ * ของเดิม เพราะพื้นหลังหลายตัว (badge-soft.primary, slip-status.win, slip-card-win) เป็นโทน
+ * เขียวเดียวกับพื้นการ์ดพอดี ถ้าไม่ปรับจะกลืนจนอ่านไม่ออก */
+.slip-card.st-win {
+  background: linear-gradient(135deg, #1D7A52 0%, #14532D 100%);
+  border-color: #2FA372;
+  box-shadow: 0 4px 14px rgba(29, 122, 82, 0.45), var(--sh-card);
+}
+.slip-card.st-win .slip-card-market { color: #FFFFFF; }
+.slip-card.st-win .slip-status      { background: rgba(255, 255, 255, 0.92); color: #14532D; }
+.slip-card.st-win .badge-soft       { background: rgba(0, 0, 0, 0.35); color: #FFFFFF; }
+.slip-card.st-win .chip-static      { background: rgba(0, 0, 0, 0.35); border-color: rgba(255, 255, 255, 0.4); color: #FFFFFF; }
+.slip-card.st-win .ci-price         { color: #FFDE7A; }
+.slip-card.st-win .slip-card-win    { color: #FFDE7A; font-size: 14px; }
+.slip-card.st-win .slip-pay-status.is-paid { background: rgba(255, 255, 255, 0.92); color: #14532D; }
+.slip-card.st-win .slip-meta        { color: rgba(255, 255, 255, 0.78); }
+.slip-card.st-win .slip-del         { border-color: rgba(255, 255, 255, 0.5); color: #FFFFFF; }
+
+/* ── Settings ─────────────────────────────────────── */
+.settings-card {
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--sh-card);
+}
+.settings-card h3 { margin: 0 0 12px; font-size: 15px; font-weight: 800; }
+
+/* ── Market status strip — icon + ชื่อ + badge หวย90/95 + countdown สด
+   โชว์ต่อเนื่องหน้าจอ 3-5 แทน date-pill/ctx-line เดิม (เทียบเท่า RatePanel header ฝั่ง desktop) ── */
+.market-strip {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  box-shadow: var(--sh-card);
+}
+.market-strip-ic {
+  width: 40px; height: 40px; flex-shrink: 0;
+  border-radius: var(--r-sm);
+  background: radial-gradient(circle at 30% 30%, #FFDE7A, #8A6416);
+  display: grid; place-items: center;
+  overflow: hidden; font-size: 18px;
+}
+.market-strip-ic img { width: 100%; height: 100%; object-fit: cover; }
+.market-strip-ic svg { width: 20px; height: 20px; color: #2B0705; }
+.market-strip-info { flex: 1; min-width: 0; }
+.market-strip-name {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 700;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: #FFFFFF;
+}
+.fmt-badge-mini {
+  flex-shrink: 0;
+  font-size: 9px; font-weight: 800;
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 222, 122, 0.22); color: #FFDE7A;
+}
+.market-strip-date { font-size: 11px; color: var(--c-text-muted); font-weight: 500; margin-top: 1px; }
+.market-strip-date.is-tomorrow { color: #FFDE7A; font-weight: 700; }
+.market-strip-cd {
+  flex-shrink: 0;
+  font-size: 12px; font-weight: 800;
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  background: #1B0403; color: #FFDE7A; border: 1px solid var(--c-brand-dark);
+}
+.market-strip-cd.state-open    { color: #4ADE80; }
+.market-strip-cd.state-closing { color: #FFDE7A; }
+.market-strip-cd.state-closed  { color: #FF6B5B; }
+.market-strip-cd.state-notopen { color: var(--c-text-subtle); }
+
+.fmt-sub { font-size: 10px; color: var(--c-text-subtle); font-weight: 500; margin-top: -2px; }
+
+/* ── Quick-link chips (เลขอั้น/ผลย้อนหลัง) — เปิด bottom sheet ── */
+.sheet-links-row { display: flex; gap: 8px; margin-bottom: 14px; }
+.link-chip {
+  flex: 1;
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-pill);
+  padding: 8px 10px;
+  font-size: 12px; font-weight: 700;
+  color: var(--c-text);
+  cursor: pointer;
+  text-align: center;
+}
+.link-chip:active { background: rgba(0, 0, 0, 0.5); }
+
+/* ── Bottom sheet (generic) ──────────────────────────── */
+.sheet-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 60;
+  display: flex; align-items: flex-end;
+  animation: sheet-fade-in 0.2s ease-out;
+}
+@keyframes sheet-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.sheet-box {
+  width: 100%; max-width: 480px; margin: 0 auto;
+  background: #2B070B;
+  border: 2px solid var(--c-brand-dark); border-bottom: 0;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  max-height: 80dvh;
+  display: flex; flex-direction: column;
+  box-shadow: var(--sh-elevated);
+  animation: sheet-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes sheet-slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.sheet-handle {
+  width: 36px; height: 4px;
+  background: var(--c-border);
+  border-radius: var(--r-pill);
+  margin: 10px auto 0;
+  flex-shrink: 0;
+}
+.sheet-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px;
+  font-size: 15px; font-weight: 800;
+  flex-shrink: 0;
+  color: #FFFFFF;
+}
+.sheet-body { padding: 0 16px 24px; overflow-y: auto; }
+.sheet-empty { text-align: center; color: var(--c-text-muted); font-size: 13px; padding: 32px 0; }
+
+.sheet-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.sheet-tab {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1.5px solid transparent;
+  border-radius: var(--r-pill);
+  padding: 7px 10px;
+  font-size: 12px; font-weight: 700;
+  color: var(--c-text-muted);
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+}
+.sheet-tab.is-active {
+  background: linear-gradient(135deg, #FFDE7A 0%, #D9A62A 100%);
+  color: #2B0705;
+}
+.sheet-tab-count {
+  font-size: 10px; font-weight: 800;
+  background: rgba(255,255,255,0.3);
+  border-radius: var(--r-pill);
+  padding: 1px 6px;
+}
+.sheet-tab:not(.is-active) .sheet-tab-count { background: var(--c-border); color: #2B0705; }
+
+/* ── เลขอั้น list ─────────────────────────────────────── */
+.banned-list-hd, .banned-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  padding: 8px 4px;
+  text-align: center;
+}
+.banned-list-hd {
+  font-size: 11px; font-weight: 700; color: var(--c-text-muted);
+  border-bottom: 1.5px solid var(--c-border);
+}
+.banned-row { font-size: 13px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.08); color: #FFFFFF; }
+.banned-num { font-weight: 800; }
+.banned-row .is-blocked { color: var(--c-text-subtle); font-weight: 500; }
+
+/* ── ผลย้อนหลัง list ──────────────────────────────────── */
+.hist-list-hd, .hist-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 6px;
+  padding: 9px 4px;
+  text-align: center;
+}
+.hist-list-hd {
+  font-size: 11px; font-weight: 700; color: var(--c-text-muted);
+  border-bottom: 1.5px solid var(--c-border);
+}
+.hist-row { font-size: 13px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.08); color: #FFFFFF; }
+.hist-date { font-weight: 500; color: var(--c-text-muted); font-size: 12px; }
+.hist-num { font-variant-numeric: tabular-nums; }
+
+/* ── Notopen sheet ────────────────────────────────────── */
+.notopen-body { text-align: center; padding: 8px 0 4px; }
+.notopen-img {
+  width: 88px; height: 88px; object-fit: cover;
+  border-radius: var(--r-md);
+  margin: 0 auto 10px;
+  box-shadow: var(--sh-card);
+}
+.notopen-body .big-ic {
+  width: 64px; height: 64px;
+  display: block; margin: 0 auto 10px;
+  color: var(--c-text-subtle);
+}
+.notopen-name { font-size: 15px; font-weight: 800; margin-bottom: 6px; color: #FFFFFF; }
+.notopen-cd {
+  font-size: 30px; font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-brand);
+  margin-bottom: 4px;
+}
+.notopen-sub { font-size: 12px; color: var(--c-text-muted); font-weight: 500; margin-bottom: 16px; }
+
+/* toast */
+.liff-toast {
+  position: fixed;
+  bottom: 90px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.92);
+  color: #fff;
+  border-radius: var(--r-pill);
+  padding: 10px 20px;
+  font-size: 13px; font-weight: 600;
+  z-index: 50;
+  max-width: 90%;
+  text-align: center;
+  animation: toast-in 0.25s ease-out;
+}
+.liff-toast.err { background: rgba(185, 28, 28, 0.95); }
+@keyframes toast-in {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ── หน้าหลัก (LiffHome) — ประกาศร้าน / สรุปยอด 3 ช่อง / ผลหวยล่าสุด / เลขเด็ด ──
+   .hero-card/.stat-grid/.stat-card ด้านบนใช้ของเดิม (Home/wallet summary) ที่มีอยู่แล้ว ── */
+.wallet-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.wallet-grid .stat-card { padding: 12px 8px; text-align: center; }
+.wallet-grid .stat-value { font-size: 16px; }
+
+.home-empty {
+  text-align: center;
+  color: var(--c-text-muted);
+  font-size: 13px;
+  padding: 20px 0;
+}
+
+.home-announce {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid var(--c-brand-dark);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 13px; font-weight: 600;
+  color: var(--c-brand);
+}
+.home-announce-ic { width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; color: var(--c-brand); }
+
+/* ── ผลหวยล่าสุด — horizontal scroll strip ── */
+.results-strip {
+  display: flex; gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 20px;
+  scrollbar-width: none;
+}
+.results-strip::-webkit-scrollbar { display: none; }
+.result-card {
+  flex: 0 0 auto;
+  width: 132px;
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 12px 10px;
+  box-shadow: var(--sh-card);
+  text-align: center;
+}
+.result-flag {
+  width: 32px; height: 32px;
+  margin: 0 auto 6px;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  display: grid; place-items: center;
+  background: radial-gradient(circle at 30% 30%, #FFDE7A, #8A6416);
+}
+.result-flag img { width: 100%; height: 100%; object-fit: cover; }
+.result-flag svg { width: 18px; height: 18px; color: #2B0705; }
+.result-title {
+  font-size: 11px; font-weight: 700;
+  margin-bottom: 8px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: #FFFFFF;
+}
+.result-nums { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+.result-nums .badge-soft { width: 100%; font-size: 11px; }
+
+/* ── เลขเด็ดวันนี้ — หมายเลขที่มีคนแทงเยอะสุด (aggregate เท่านั้น) — ตายตัว 6 ตัว
+ * จัดกริด 3 คอลัมน์ 2 แถวเสมอ (ไม่ใช้ flex-wrap เดิม เพราะขนาดจอต่างกันจะห่อไม่เท่ากัน) */
+.hot-chip-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+.hot-chip {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-hot);
+  border-radius: var(--r-md);
+  padding: 12px 6px;
+}
+.hot-chip b { font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; color: #FFFFFF; letter-spacing: 0.02em; }
+.hot-chip small { font-size: 10px; color: var(--c-text-muted); font-weight: 600; }
+.hot-chip-count {
+  font-size: 10px; font-weight: 800;
+  background: var(--c-hot); color: #fff;
+  border-radius: var(--r-pill);
+  padding: 1px 6px;
+}
+/* เลข "เย็น" (ออกน้อยสุด) — เปลี่ยนแค่สีกรอบ/ตัวเลขจาก --c-hot เป็น --c-cold ให้แยกจากเลขฮอต
+ * ด้วยสายตาทันที โครงสร้างเดียวกับ .hot-chip ทุกอย่าง */
+.hot-chip.is-cold { border-color: var(--c-cold); }
+.hot-chip.is-cold b { color: #DCEBFF; }
+
+/* ── ฟีดผู้โชคดีล่าสุด — ใช้ customer_name ที่บันทึกไว้ตอนแทงจริง ── */
+.winner-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.winner-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+}
+.winner-main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.winner-name { font-size: 13px; font-weight: 700; color: #FFFFFF; }
+.winner-detail { display: flex; align-items: center; gap: 6px; }
+.winner-market { font-size: 11px; color: var(--c-text-muted); font-weight: 600; }
+.winner-amount { font-size: 15px; font-weight: 800; color: var(--c-brand); white-space: nowrap; }
+
+/* ── ตีเลขจากความฝัน — ช่องค้นหา + ผลลัพธ์จากพจนานุกรม (dreamDictionary.ts) ── */
+.dream-input {
+  width: 100%;
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  font-size: 16px; /* >=16px กัน iOS Safari auto-zoom ตอน focus */
+  font-family: inherit;
+  color: var(--c-text);
+  margin-bottom: 10px;
+}
+.dream-input::placeholder { color: var(--c-text-muted); }
+.dream-input:focus { outline: none; border-color: var(--c-brand); }
+.dream-result-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.dream-result-row {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+}
+.dream-result-label { display: block; font-size: 13px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; }
+.dream-result-numbers { display: flex; flex-wrap: wrap; gap: 6px; }
+.dream-result-numbers .chip-static { margin: 0; }

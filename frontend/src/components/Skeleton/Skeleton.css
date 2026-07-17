@@ -1,0 +1,40 @@
+/* =============================================================
+ * Skeleton.css — shimmer placeholder
+ * ============================================================= */
+
+.skel {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  background: #e9eef2;
+  border-radius: var(--input-radius, 3px);
+  vertical-align: middle;
+}
+
+.skel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.65) 50%,
+    transparent 100%
+  );
+  animation: skel-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes skel-shimmer {
+  100% { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skel::after { animation: none; }
+  .skel { animation: skel-pulse 1.6s ease-in-out infinite; }
+}
+
+@keyframes skel-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}

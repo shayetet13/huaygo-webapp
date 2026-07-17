@@ -1,0 +1,1156 @@
+/**
+ * @file pages/BetForm/BetForm.css
+ * @page หน้าแทงหวย (/bet/:marketId)
+ * @description สไตล์ minimal — ใช้ CSS variables จาก globals.css เหมือนหน้าอื่น
+ */
+
+/* ══════════════════════════════════════════
+   Base
+══════════════════════════════════════════ */
+.bf-page {
+  min-height: 100vh;
+  background: var(--bg-other);
+  padding: 16px 12px 70px;
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  color: var(--c-text);
+}
+
+.bf-center {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Loading / error ── */
+.bf-state-box {
+  background: #fff;
+  border-radius: var(--card-radius);
+  border: var(--card-border);
+  padding: 40px;
+  text-align: center;
+  font-size: var(--fs-lg);
+  color: #555;
+  margin: 20px 0;
+  box-shadow: var(--card-shadow);
+}
+.bf-state-err { color: var(--c-danger); }
+
+/* ── Action button ── */
+.bf-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: var(--card-radius);
+  cursor: pointer;
+  white-space: nowrap;
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.7);
+  color: #fff;
+  transition: background var(--t), border-color var(--t);
+}
+.bf-action-btn:hover { background: rgba(255,255,255,.32); border-color: #fff; }
+
+.bf-action-btn--outline {
+  background: #fff;
+  border-color: var(--c-primary);
+  color: var(--c-primary);
+}
+.bf-action-btn--outline:hover {
+  background: #eff6ff;
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+}
+
+/* ══════════════════════════════════════════
+   Header bar
+══════════════════════════════════════════ */
+.bf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: var(--card-radius);
+  border: var(--card-border);
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--card-shadow);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.bf-header-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+.bf-header-breadcrumb { font-size: var(--fs-md); }
+.bf-bc-group { color: var(--c-primary); font-weight: 700; }
+.bf-bc-sep   { color: var(--c-muted); margin: 0 2px; }
+.bf-bc-name  { color: var(--c-text); font-weight: 600; }
+
+.bf-header-timer {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--c-danger);
+  background: #fef2f2;
+  padding: 5px 14px;
+  border-radius: var(--card-radius);
+  border: 1px solid #fecaca;
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+.bf-header-timer.closed { color: var(--c-muted); background: #f8fafc; border-color: var(--c-border); }
+
+.bf-tomorrow-warn {
+  background: #ffffff;
+  border: 2px solid #ef4444;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* ══════════════════════════════════════════
+   Two-column layout
+══════════════════════════════════════════ */
+.bf-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.bf-left  { display: flex; flex-direction: column; gap: 12px; }
+.bf-right { display: flex; flex-direction: column; gap: 12px; }
+
+/* ══════════════════════════════════════════
+   Generic panel (เลขอั้น / ผลย้อนหลัง)
+══════════════════════════════════════════ */
+.bf-panel {
+  background: #fff;
+  border-radius: var(--card-radius);
+  border: var(--card-border);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.bf-panel-hd {
+  background: var(--c-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  padding: 9px 14px;
+}
+
+/* ══════════════════════════════════════════
+   เลขอั้น tabs & table
+══════════════════════════════════════════ */
+.bf-panel-tabs {
+  display: flex;
+  background: #fff;
+  border-bottom: var(--card-border);
+}
+.bf-panel-tab {
+  flex: 1;
+  padding: 7px 4px;
+  border: none;
+  background: transparent;
+  font-size: var(--fs-xs);
+  color: var(--c-muted);
+  cursor: pointer;
+  font-family: inherit;
+  border-right: 1px solid var(--c-border);
+  border-bottom: 2px solid transparent;
+  transition: all var(--t);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.bf-panel-tab:last-child { border-right: none; }
+.bf-panel-tab.active {
+  color: var(--c-primary);
+  font-weight: 700;
+  border-bottom-color: var(--c-primary);
+}
+.bf-panel-tab:hover:not(.active) { color: var(--c-text); }
+
+/* ══════════════════════════════════════════
+   เลขอั้น Card — dark teal theme (ตามรูปอ้างอิง)
+══════════════════════════════════════════ */
+.bf-banned-card {
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.bf-banned-hd {
+  background: #0891b2;
+  color: #ffeb3b;
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  text-align: center;
+  padding: 10px 12px;
+  letter-spacing: 1px;
+}
+
+.bf-banned-tabs-row {
+  display: flex;
+  background: #0891b2;
+  padding: 0 8px 8px;
+  gap: 4px;
+}
+
+.bf-banned-tab {
+  flex: 1;
+  background: #bde8f1;
+  border: none;
+  border-radius: 4px;
+  padding: 7px 4px;
+  font-size: var(--fs-xs);
+  font-family: inherit;
+  font-weight: 500;
+  color: #0e4f5c;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: background var(--t);
+}
+.bf-banned-tab.active {
+  background: #fff;
+  font-weight: 700;
+  color: #0f172a;
+}
+.bf-banned-tab:hover:not(.active) { background: #d4f1f9; }
+
+.bf-banned-count {
+  background: var(--c-danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 99px;
+}
+
+.bf-banned-tbl-wrap {
+  background: #fff;
+}
+
+.bf-banned-empty {
+  background: #fff;
+  color: var(--c-success);
+  font-weight: 700;
+  font-size: var(--fs-xs);
+  text-align: center;
+  padding: 16px 0;
+}
+
+.bf-banned-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.bf-banned-tbl th {
+  background: #f0f9fc;
+  padding: 6px 8px;
+  text-align: center;
+  color: #0891b2;
+  font-weight: 600;
+  border-bottom: 1px solid #bde8f1;
+  font-size: 12px;
+}
+.bf-banned-th-num {
+  text-align: left !important;
+  padding-left: 12px !important;
+  width: 44px;
+  border-right: 1px solid #bde8f1;
+}
+.bf-banned-th-rate { text-align: center !important; }
+.bf-banned-tbl td {
+  padding: 7px 8px;
+  border-bottom: 1px solid #f0f9fc;
+  text-align: center;
+  font-size: 13px;
+}
+.bf-banned-tbl tbody tr:last-child td { border-bottom: none; }
+.bf-banned-tbl tbody tr:nth-child(even) { background: #f8fcfe; }
+.bf-banned-tbl tbody tr:hover { background: #e8f6fb; }
+
+.bf-banned-num {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  color: #0f172a;
+  letter-spacing: 1px;
+  text-align: left !important;
+  padding-left: 12px !important;
+  border-right: 1px solid #e8f4f8;
+}
+.bf-banned-cell { text-align: center; }
+
+/* ปิดรับ badge — red pill */
+.bf-badge-closed {
+  display: inline-block;
+  background: var(--c-danger);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+/* เลขเต็ม — blue text */
+.bf-badge-full {
+  color: #0891b2;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════
+   ผลย้อนหลัง Card — dark navy theme
+══════════════════════════════════════════ */
+.bf-hist-card {
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  background: #163352;
+}
+
+.bf-hist-hd {
+  background: #163352;
+  color: #ffeb3b;
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  text-align: center;
+  padding: 10px 12px;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #1e4570;
+}
+
+.bf-hist-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bf-hist-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 200px;
+  white-space: nowrap;
+}
+.bf-hist-tbl th {
+  background: #1a3a5c;
+  padding: 7px 6px;
+  text-align: center;
+  color: #93c5fd;
+  font-weight: 600;
+  border-bottom: 1px solid #1e4570;
+  font-size: 12px;
+}
+.bf-hist-tbl th:first-child { text-align: left; padding-left: 10px; }
+.bf-hist-tbl td {
+  padding: 7px 6px;
+  text-align: center;
+  border-bottom: 1px solid #1e4570;
+  color: #e2e8f0;
+  font-size: 13px;
+}
+.bf-hist-tbl tr:last-child td { border-bottom: none; }
+.bf-hist-tbl tbody tr:nth-child(even) { background: #1a3a5c; }
+.bf-hist-tbl tbody tr:hover { background: #1e4570; }
+
+.bf-hist-market {
+  text-align: left !important;
+  padding-left: 10px !important;
+  color: #bfdbfe;
+  font-size: 12px;
+  white-space: nowrap;
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bf-hist-date { font-size: 12px; color: #94a3b8; }
+.bf-hist-num  { font-weight: 700; color: #fff; font-family: 'Courier New', monospace; letter-spacing: 1px; }
+.bf-hist-empty { color: #64748b; text-align: center; padding: 16px; }
+
+/* ══════════════════════════════════════════
+   Rate card
+══════════════════════════════════════════ */
+.bf-rate-card {
+  background: #fff;
+  border-radius: var(--card-radius);
+  border: var(--card-border);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+/* Header — solid primary blue (ธีมเดียวกับ bf-panel-hd) */
+.bf-rate-hd {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--c-primary);
+  color: #fff;
+  gap: 12px;
+}
+
+.bf-rate-hd-left   { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.bf-rate-hd-center { display: flex; align-items: center; justify-content: center; flex: 1; }
+.bf-rate-hd-right  { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+
+.bf-rate-group-badge {
+  background: rgba(255,255,255,.22);
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  display: inline-block;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.bf-rate-title {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  line-height: 1.3;
+  word-break: break-word;
+}
+.bf-rate-draw  { font-size: var(--fs-xs); opacity: .88; }
+
+.bf-rate-logo {
+  height: 36px;
+  width: auto;
+  max-width: 52px;
+  object-fit: contain;
+  background: rgba(255,255,255,.18);
+  border-radius: var(--card-radius);
+  padding: 3px;
+}
+
+/* หวย90 / หวย95 badge — amber สีตัดกับ blue header */
+.bf-rate-type-badge {
+  background: #fbbf24;
+  color: #1e1b4b;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+/* Rate table */
+.bf-rate-tbl { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); }
+.bf-rate-tbl thead th {
+  background: var(--tbl-hd-bg);
+  padding: 8px 12px;
+  text-align: center;
+  color: var(--c-primary);
+  border-bottom: var(--tbl-hd-border);
+  font-weight: 600;
+  font-size: var(--fs-xs);
+}
+.bf-rate-tbl tbody tr:nth-child(even) { background: #fafafa; }
+.bf-rate-tbl tbody tr:hover { background: var(--tbl-row-hover); }
+.bf-rate-tbl tbody td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #f5f5f5;
+  text-align: center;
+}
+.bf-rate-tbl tbody tr:last-child td { border-bottom: none; }
+
+.bf-rate-type  { font-weight: 700; color: var(--c-primary); text-align: left !important; }
+.bf-rate-pay   { color: var(--c-success); font-weight: 700; font-size: var(--fs-sm); }
+.bf-rate-disc  { color: var(--c-warning); font-weight: 600; }
+.bf-rate-range { font-size: var(--fs-xs); color: var(--c-muted); }
+
+/* ══════════════════════════════════════════
+   Form card
+══════════════════════════════════════════ */
+.bf-form-card {
+  background: #fff;
+  border-radius: var(--card-radius);
+  border: var(--card-border);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+.bf-form-card.bf-closed { opacity: .65; pointer-events: none; }
+
+/* Tabs — white + blue underline (ตาม Finance page) */
+.bf-tabs {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-bottom: var(--card-border);
+  padding: 0 8px;
+  min-height: 44px;
+  gap: 2px;
+}
+.bf-tab {
+  padding: 11px 18px;
+  border: none;
+  background: transparent;
+  color: var(--c-muted);
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color var(--t), border-color var(--t);
+  white-space: nowrap;
+}
+.bf-tab.active {
+  color: var(--c-primary);
+  border-bottom-color: var(--c-primary);
+  font-weight: 700;
+}
+.bf-tab:hover:not(.active) { color: var(--c-text); }
+
+.bf-tab-spacer { flex: 1; }
+
+/* หวย90/หวย95 badge ใน tab bar */
+.bf-rate-badge-sm {
+  background: #fbbf24;
+  color: #1e1b4b;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 3px;
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
+.bf-tab-body {
+  padding: 16px;
+  background: #fafafa;
+  border-bottom: var(--card-border);
+}
+
+/* ══════════════════════════════════════════
+   Common input primitives
+══════════════════════════════════════════ */
+.bf-input-group { display: flex; flex-direction: column; gap: 4px; }
+
+.bf-input-lbl {
+  font-size: var(--fs-xs);
+  color: var(--c-muted);
+  font-weight: 600;
+}
+
+.bf-amt-input {
+  width: 86px;
+  padding: 8px 10px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--input-radius);
+  font-size: var(--fs-md);
+  text-align: right;
+  font-family: inherit;
+  background: #fff;
+  transition: border-color var(--t);
+}
+.bf-amt-input:focus {
+  outline: none;
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 2px rgba(37,99,235,.1);
+}
+
+.bf-add-btn {
+  align-self: flex-end;
+  padding: 9px 18px;
+  border: none;
+  border-radius: var(--card-radius);
+  background: var(--c-success);
+  color: #fff;
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--t);
+}
+.bf-add-btn:hover   { background: #15803d; }
+.bf-add-btn:disabled { background: var(--c-muted); cursor: not-allowed; }
+
+.bf-ghost-btn {
+  padding: 8px 14px;
+  border: 1px solid var(--c-primary);
+  border-radius: var(--card-radius);
+  background: #fff;
+  color: var(--c-primary);
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--t);
+}
+.bf-ghost-btn:hover { background: #eff6ff; }
+
+/* ══════════════════════════════════════════
+   แทงเร็ว
+══════════════════════════════════════════ */
+.bf-quick { display: flex; flex-direction: column; gap: 14px; }
+
+.bf-mode-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.bf-mode-label { font-size: var(--fs-sm); font-weight: 600; color: var(--c-text); white-space: nowrap; }
+.bf-mode-row   { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.bf-mode-btn {
+  padding: 7px 13px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--card-radius);
+  background: #fff;
+  color: var(--c-text);
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--t);
+  white-space: nowrap;
+}
+.bf-mode-btn:hover  { background: #eff6ff; border-color: var(--c-primary); color: var(--c-primary); }
+.bf-mode-btn.active {
+  background: var(--c-primary);
+  color: #fff;
+  border-color: var(--c-primary);
+  font-weight: 700;
+}
+
+/* Input card */
+.bf-input-card {
+  background: #fff;
+  border: 1px solid var(--c-border);
+  border-radius: var(--card-radius);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bf-input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.bf-num-wrap { display: flex; align-items: center; gap: 6px; }
+
+.bf-num-input {
+  width: 130px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--card-radius);
+  font-size: 26px;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  letter-spacing: 6px;
+  color: var(--c-primary);
+  background: #f8faff;
+  transition: border-color var(--t), box-shadow var(--t);
+}
+.bf-num-input:focus {
+  outline: none;
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 2px rgba(37,99,235,.1);
+  background: #fff;
+}
+
+.bf-rev-btn {
+  align-self: flex-end;
+  padding: 9px 12px;
+  border: 1px solid #fbbf24;
+  border-radius: var(--card-radius);
+  background: #fffbeb;
+  color: #92400e;
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--t);
+}
+.bf-rev-btn:hover:not(:disabled) { background: #fef3c7; }
+.bf-rev-btn:disabled { opacity: .38; cursor: not-allowed; }
+
+.bf-amt-col { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+
+/* Hints */
+.bf-hint {
+  font-size: var(--fs-sm);
+  padding: 7px 12px;
+  border-radius: var(--card-radius);
+}
+.bf-hint-blue  { background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; }
+.bf-hint-amber { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+.bf-hint-red   { background: #fef2f2; border: 1px solid #fecaca; color: var(--c-danger); }
+
+/* ══════════════════════════════════════════
+   คลาสสิก
+══════════════════════════════════════════ */
+.bf-classic { display: flex; flex-direction: column; gap: 12px; }
+.bf-classic-scroll { overflow-x: auto; }
+
+.bf-classic-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  min-width: 380px;
+}
+.bf-classic-tbl thead th {
+  background: var(--tbl-hd-bg);
+  padding: 9px 10px;
+  text-align: center;
+  color: var(--c-primary);
+  border-bottom: var(--tbl-hd-border);
+  font-weight: 700;
+  font-size: var(--fs-xs);
+}
+.bf-classic-tbl tbody td {
+  padding: 5px 7px;
+  border-bottom: 1px solid #f5f5f5;
+}
+.bf-classic-tbl tbody tr:hover { background: var(--tbl-row-hover); }
+
+.bf-c-num {
+  width: 78px;
+  padding: 7px 10px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--card-radius);
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 3px;
+  color: var(--c-primary);
+  background: #f8faff;
+}
+.bf-c-num:focus { outline: none; border-color: var(--c-primary); }
+
+.bf-c-amt {
+  width: 64px;
+  padding: 7px 8px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--card-radius);
+  font-size: var(--fs-sm);
+  text-align: right;
+  font-family: inherit;
+}
+.bf-c-amt:focus { outline: none; border-color: var(--c-primary); }
+
+.bf-c-del {
+  padding: 4px 10px;
+  border: 1px solid #fca5a5;
+  border-radius: var(--card-radius);
+  background: #fef2f2;
+  color: var(--c-danger);
+  font-size: var(--fs-xs);
+  cursor: pointer;
+  font-family: inherit;
+}
+.bf-c-del:hover:not(:disabled) { background: #fee2e2; }
+.bf-c-del:disabled { color: #ccc; border-color: #eee; cursor: default; }
+
+.bf-classic-foot { display: flex; justify-content: flex-end; gap: 10px; align-items: center; }
+
+/* ══════════════════════════════════════════
+   วางโพย
+══════════════════════════════════════════ */
+.bf-poem { display: flex; flex-direction: column; gap: 12px; }
+
+.bf-poem-area {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--card-radius);
+  font-size: 17px;
+  font-family: 'Courier New', monospace;
+  line-height: 1.9;
+  letter-spacing: 2px;
+  color: var(--c-primary);
+  background: #f8faff;
+  resize: vertical;
+  transition: border-color var(--t);
+}
+.bf-poem-area:focus { outline: none; border-color: var(--c-primary); background: #fff; }
+
+.bf-poem-prices { display: flex; flex-direction: column; gap: 8px; }
+.bf-poem-price-label { font-size: var(--fs-sm); font-weight: 600; color: var(--c-text); }
+.bf-poem-price-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+
+/* ══════════════════════════════════════════
+   Entry list
+══════════════════════════════════════════ */
+.bf-entries {
+  margin: 0;
+  border-top: var(--card-border);
+  background: #fafafa;
+}
+
+.bf-entries-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--c-primary);
+  background: #eff6ff;
+  border-bottom: var(--card-border);
+}
+
+.bf-clear-sm {
+  padding: 4px 12px;
+  border: 1px solid #fca5a5;
+  border-radius: var(--card-radius);
+  background: #fef2f2;
+  color: var(--c-danger);
+  font-size: var(--fs-xs);
+  font-family: inherit;
+  cursor: pointer;
+}
+.bf-clear-sm:hover { background: #fee2e2; }
+
+.bf-entries-scroll { overflow-x: auto; max-height: 260px; overflow-y: auto; }
+
+.bf-entries-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  min-width: 340px;
+}
+.bf-entries-tbl thead th {
+  background: var(--tbl-hd-bg);
+  padding: 8px 10px;
+  text-align: center;
+  color: var(--c-primary);
+  border-bottom: var(--tbl-hd-border);
+  font-weight: 600;
+  font-size: var(--fs-xs);
+  position: sticky;
+  top: 0;
+}
+.bf-entries-tbl tbody td {
+  padding: 7px 10px;
+  border-bottom: 1px solid #f5f5f5;
+  text-align: center;
+}
+.bf-entries-tbl tbody tr:last-child td { border-bottom: none; }
+.bf-entries-tbl tbody tr:hover { background: var(--tbl-row-hover); }
+
+.bf-entries-total {
+  padding: 9px 16px;
+  font-size: var(--fs-sm);
+  color: var(--c-text);
+  text-align: right;
+  border-top: var(--card-border);
+  background: #eff6ff;
+}
+.bf-total-num { color: var(--c-success); font-size: 18px; font-weight: 700; }
+
+/* ── Shared table cell classes ── */
+.bf-num-cell  { font-weight: 700; font-family: 'Courier New', monospace; letter-spacing: 2px; color: var(--c-primary); font-size: var(--fs-sm); }
+.bf-num-big   { font-weight: 700; font-family: 'Courier New', monospace; letter-spacing: 3px; color: var(--c-primary); font-size: var(--fs-md); }
+.bf-td-amt    { font-weight: 700; color: var(--c-text); }
+.bf-td-win    { color: var(--c-success); font-weight: 700; }
+.bf-td-muted  { color: var(--c-muted); font-size: var(--fs-xs); }
+.bf-td-id     { font-weight: 700; color: var(--c-muted); }
+.bf-empty-cell { padding: 20px; color: var(--c-muted); text-align: center; font-size: var(--fs-sm); }
+
+.bf-rm-btn {
+  padding: 3px 9px;
+  border: 1px solid #fca5a5;
+  border-radius: var(--card-radius);
+  background: #fef2f2;
+  color: var(--c-danger);
+  font-size: var(--fs-xs);
+  cursor: pointer;
+  font-family: inherit;
+}
+.bf-rm-btn:hover { background: #fee2e2; }
+
+/* ══════════════════════════════════════════
+   Form footer
+══════════════════════════════════════════ */
+.bf-form-footer {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+  border-top: var(--card-border);
+}
+
+.bf-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.bf-footer-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.bf-footer-logo {
+  height: 28px;
+  width: auto;
+  max-width: 40px;
+  object-fit: contain;
+  border-radius: var(--card-radius);
+}
+
+.bf-footer-market { font-weight: 700; color: var(--c-primary); font-size: var(--fs-sm); }
+.bf-footer-draw   { color: var(--c-muted); font-size: var(--fs-xs); }
+
+.bf-footer-cd {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--c-danger);
+  background: #fef2f2;
+  padding: 4px 12px;
+  border-radius: var(--card-radius);
+  border: 1px solid #fecaca;
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+.bf-footer-cd.closed { color: var(--c-muted); background: #f8fafc; border-color: var(--c-border); }
+
+.bf-footer-note-row { display: flex; align-items: center; gap: 10px; }
+
+.bf-note-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--input-radius);
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  background: #fff;
+}
+.bf-note-input:focus { outline: none; border-color: var(--c-primary); }
+
+.bf-save-msg {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--c-success);
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: var(--card-radius);
+  padding: 8px 14px;
+}
+.bf-save-msg.warn { color: var(--c-warning); background: #fffbeb; border-color: #fde68a; }
+
+.bf-footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.bf-total-display { font-size: var(--fs-sm); color: var(--c-text); }
+.bf-total-display strong { color: var(--c-success); font-size: 20px; }
+
+.bf-save-btn {
+  padding: 10px 28px;
+  border: none;
+  border-radius: var(--card-radius);
+  background: var(--c-primary);
+  color: #fff;
+  font-size: var(--fs-md);
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--t);
+  white-space: nowrap;
+}
+.bf-save-btn:hover:not(:disabled) { background: #1d4ed8; }
+.bf-save-btn:disabled { background: var(--c-muted); cursor: not-allowed; }
+
+
+/* ══════════════════════════════════════════
+   โพยล่าสุด
+══════════════════════════════════════════ */
+.bf-slips {
+  background: #fff;
+  border-radius: var(--card-radius);
+  border: var(--card-border);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+.bf-slips-scroll { overflow-x: auto; }
+
+.bf-slips-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  min-width: 560px;
+}
+.bf-slips-tbl thead th {
+  background: var(--tbl-hd-bg);
+  padding: 9px 10px;
+  text-align: center;
+  color: var(--c-primary);
+  border-bottom: var(--tbl-hd-border);
+  font-weight: 700;
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+.bf-slips-tbl tbody td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f5f5f5;
+  text-align: center;
+  vertical-align: middle;
+}
+.bf-slips-tbl tbody tr:last-child td { border-bottom: none; }
+.bf-slips-tbl tbody tr:hover { background: var(--tbl-row-hover); }
+
+.bf-slip-note {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+/* Row tint by status */
+.sl-win     { background: #f0fdf4; }
+.sl-lose    { background: #fef2f2; }
+.sl-cancel  { background: #fffbeb; }
+.sl-pending { background: #f8fafc; }
+
+.bf-status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.bf-status-badge.sl-win     { background: #dcfce7; color: var(--c-success); }
+.bf-status-badge.sl-lose    { background: #fee2e2; color: var(--c-danger); }
+.bf-status-badge.sl-cancel  { background: #fef3c7; color: var(--c-warning); }
+.bf-status-badge.sl-pending { background: #dbeafe; color: var(--c-primary); }
+
+/* ══════════════════════════════════════════
+   อัตราการจ่าย Modal
+══════════════════════════════════════════ */
+.bf-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.bf-modal-box {
+  background: #fff;
+  border-radius: var(--card-radius);
+  width: 100%;
+  max-width: 560px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 30px rgba(0,0,0,.18);
+  overflow: hidden;
+}
+
+/* Modal header — solid primary blue เหมือน rate card */
+.bf-modal-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 16px;
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  color: #fff;
+  background: var(--c-primary);
+  flex-shrink: 0;
+}
+
+.bf-modal-close {
+  background: rgba(255,255,255,.2);
+  border: none;
+  font-size: 16px;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: var(--card-radius);
+  cursor: pointer;
+  color: #fff;
+  font-family: inherit;
+  transition: background var(--t);
+}
+.bf-modal-close:hover { background: rgba(255,255,255,.35); }
+
+.bf-modal-body {
+  overflow-y: auto;
+  padding: 16px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.bf-modal-group-title {
+  font-weight: 700;
+  font-size: var(--fs-xs);
+  color: var(--c-primary);
+  margin-bottom: 6px;
+  padding: 4px 8px;
+  background: #eff6ff;
+  border-left: 3px solid var(--c-primary);
+  border-radius: 0 var(--card-radius) var(--card-radius) 0;
+}
+
+.bf-modal-tbl { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); }
+.bf-modal-tbl thead th {
+  background: var(--tbl-hd-bg);
+  padding: 8px 10px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--c-primary);
+  border-bottom: var(--tbl-hd-border);
+}
+.bf-modal-tbl tbody td {
+  padding: 7px 10px;
+  text-align: center;
+  border-bottom: 1px solid #f5f5f5;
+}
+.bf-modal-tbl tbody tr:last-child td { border-bottom: none; }
+.bf-modal-tbl tbody tr:nth-child(even) { background: #fafafa; }
+
+.bf-modal-example { text-align: left !important; white-space: nowrap; }
+.bf-modal-win  { color: var(--c-success); font-weight: 600; }
+.bf-modal-lose { color: var(--c-muted); }
+
+.bf-modal-minmax {
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--c-muted);
+  text-align: right;
+  padding-right: 4px;
+}
+.bf-modal-minmax strong { color: var(--c-text); }
+
+/* ══════════════════════════════════════════
+   Responsive
+══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .bf-layout { grid-template-columns: 1fr; }
+  .bf-left { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+}
+
+@media (max-width: 640px) {
+  .bf-page { padding: 8px 8px 60px; }
+  .bf-left { grid-template-columns: 1fr; }
+  .bf-header { padding: 8px 12px; }
+  .bf-header-timer { font-size: var(--fs-xs); }
+  .bf-tab { padding: 10px 12px; }
+  .bf-num-input { width: 100px; font-size: 22px; letter-spacing: 4px; }
+  .bf-input-row { gap: 8px; }
+  .bf-mode-btn { padding: 6px 10px; }
+  .bf-footer-actions { flex-direction: column; align-items: stretch; }
+  .bf-save-btn { width: 100%; text-align: center; }
+  .bf-total-display { text-align: center; }
+}

@@ -1,0 +1,253 @@
+/**
+ * @file pages/Home/Home.css
+ * @page หน้าหลัก (/)
+ * @module pages/Home
+ * @description Styles หน้าหลัก — shadcn minimal theme
+ */
+
+.page-home {
+  background: var(--bg-home);
+  min-height: 100vh;
+}
+
+/* ── Profile Card ────────────────────────────────────────── */
+.profile-card {
+  background: #fff;
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  padding: 20px 28px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #eff6ff;
+  border: 2px solid #bfdbfe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+  flex-shrink: 0;
+}
+
+.profile-avatar svg {
+  width: 34px;
+  height: 34px;
+}
+
+.profile-info { flex: 1; }
+
+.profile-info .name-label {
+  color: var(--c-muted);
+  font-size: var(--fs-sm);
+}
+
+.profile-info .name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.profile-info .username {
+  font-size: 18px;
+  color: var(--c-primary);
+  font-weight: 700;
+  margin: 2px 0 6px;
+}
+
+.profile-info .label {
+  color: var(--c-muted);
+  font-size: var(--fs-sm);
+}
+
+.profile-info .name {
+  color: var(--c-text);
+  font-size: var(--fs-md);
+}
+
+.edit-link {
+  color: var(--c-danger);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  margin-top: 6px;
+  display: inline-block;
+}
+
+/* Balance section */
+.balance-section {
+  text-align: right;
+}
+
+.balance-section .label {
+  color: var(--c-muted);
+  font-size: var(--fs-sm);
+}
+
+.balance-section .balance {
+  color: var(--balance-color);
+  font-size: var(--balance-fs);
+  font-weight: 700;
+  margin: 4px 0;
+  letter-spacing: -0.5px;
+}
+
+.balance-section .win-label {
+  color: var(--c-muted);
+  font-size: var(--fs-sm);
+}
+
+.balance-section .win {
+  color: var(--win-color);
+  font-size: var(--win-fs);
+  font-weight: 700;
+  margin-top: 4px;
+  letter-spacing: -0.5px;
+}
+
+/* ── Search Box ──────────────────────────────────────────── */
+.search-box {
+  background: #fff;
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.search-box-label {
+  color: var(--c-primary);
+  font-weight: 600;
+  margin-right: 10px;
+  font-size: var(--fs-md);
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 4px;
+  font-size: var(--fs-base);
+  font-family: var(--font);
+  color: var(--c-text);
+  background: transparent;
+}
+
+/* ── Results Table ───────────────────────────────────────── */
+.section-title-home {
+  background: #eff6ff;
+  color: var(--c-primary);
+  font-weight: 600;
+  padding: 9px 16px;
+  font-size: var(--fs-md);
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+  border: var(--card-border);
+  border-bottom: none;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: var(--card-border);
+  border-top: none;
+  box-shadow: var(--card-shadow);
+}
+
+.results-table thead th {
+  background: var(--tbl-hd-bg);
+  color: var(--c-muted);
+  font-weight: 500;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: var(--fs-sm);
+  border-bottom: var(--tbl-hd-border);
+}
+
+.results-table tbody td {
+  padding: 8px;
+  text-align: center;
+  border-bottom: var(--tbl-row-sep);
+  font-size: var(--fs-base);
+  color: var(--c-text);
+}
+
+.results-table tbody tr:hover {
+  background: var(--tbl-row-hover);
+}
+
+.results-table .cat-row td {
+  background: var(--cat-bg);
+  color: var(--cat-color);
+  font-weight: 600;
+  text-align: left;
+  padding: 6px 12px;
+  font-size: var(--fs-base);
+}
+
+.lottery-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  padding-left: 16px !important;
+}
+
+/* ── Lottery icon image ──────────────────────────────────── */
+.result-icon-slot {
+  width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.lottery-icon-img {
+  width: 39px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+.lottery-icon-text {
+  width: 32px;
+  height: 22px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+/* ── Loading / error states ──────────────────────────────── */
+.home-state {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+  font-size: var(--fs-base);
+}
+.home-error { color: #dc2626; }
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .profile-card  { padding: 14px 16px; }
+  .profile-avatar { width: 50px; height: 50px; margin-right: 12px; }
+  .balance-section .balance { font-size: 22px; }
+  .balance-section .win     { font-size: 18px; }
+  .results-table thead th,
+  .results-table tbody td   { padding: 6px 4px; font-size: var(--fs-sm); }
+  .results-table .col-round { display: none; }
+}
+
+@media (max-width: 480px) {
+  .profile-card    { flex-direction: column; text-align: center; }
+  .profile-avatar  { margin-right: 0; margin-bottom: 10px; }
+  .balance-section { text-align: center; margin-top: 10px; }
+}

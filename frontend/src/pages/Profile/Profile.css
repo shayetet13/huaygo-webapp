@@ -1,0 +1,495 @@
+/**
+ * @file pages/Profile/Profile.css
+ * @page แก้ไขข้อมูลส่วนตัว (/profile)
+ * @description shadcn minimal — centered card, 2-col grid on desktop
+ */
+
+.profile-page {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding: 32px 20px 60px;
+}
+
+.profile-card-edit {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.05);
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 36px 36px;
+}
+
+/* Header row */
+.profile-edit-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.profile-back {
+  background: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 14px;
+  color: #64748b;
+  cursor: pointer;
+  font-family: 'Tahoma', 'Sarabun', sans-serif;
+  transition: background .12s, color .12s;
+  white-space: nowrap;
+}
+.profile-back:hover { background: #f1f5f9; color: #0f172a; }
+
+.profile-edit-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+/* Avatar + username */
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 28px;
+}
+
+.profile-edit-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #eff6ff;
+  border: 2px solid #bfdbfe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.profile-edit-username {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.profile-edit-role {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* Form */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-section-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 4px;
+}
+
+.profile-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.profile-input {
+  width: 100%;
+  padding: 9px 13px;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  font-size: 15px;
+  font-family: 'Tahoma', 'Sarabun', sans-serif;
+  color: #0f172a;
+  background: #fff;
+  transition: border-color .15s, box-shadow .15s;
+  box-sizing: border-box;
+}
+.profile-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.09);
+}
+
+/* Feedback */
+.profile-error {
+  color: #dc2626;
+  font-size: 13px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 0;
+}
+
+.profile-success {
+  color: #16a34a;
+  font-size: 13px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 0;
+}
+
+/* Actions */
+.profile-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
+.profile-btn-cancel {
+  padding: 9px 22px;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  background: #fff;
+  color: #64748b;
+  font-size: 14px;
+  font-family: 'Tahoma', 'Sarabun', sans-serif;
+  cursor: pointer;
+  transition: background .12s;
+}
+.profile-btn-cancel:hover { background: #f1f5f9; }
+
+.profile-btn-save {
+  padding: 9px 28px;
+  border: none;
+  border-radius: 7px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Tahoma', 'Sarabun', sans-serif;
+  cursor: pointer;
+  transition: background .12s;
+}
+.profile-btn-save:hover { background: #1d4ed8; }
+
+/* ── ตารางอัตราจ่าย ─────────────────────────────────────────── */
+.pr-section {
+  max-width: 960px;
+  margin: 28px auto 0;
+}
+
+.pr-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 16px;
+  padding-left: 4px;
+}
+
+.pr-loading {
+  color: #64748b;
+  font-size: 14px;
+  padding: 16px;
+}
+
+.pr-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.pr-group {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.pr-group-title {
+  background: var(--tbl-hd-bg, #cfe9f3);
+  color: #1565c0;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #b3dbed;
+}
+
+.pr-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.pr-table thead th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 8px 12px;
+  text-align: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.pr-table tbody tr:nth-child(even) { background: #f8fafc; }
+.pr-table tbody tr:hover { background: #eff6ff; }
+
+.pr-table tbody td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  text-align: center;
+}
+
+.pr-bet-type {
+  text-align: left !important;
+  font-weight: 600;
+  color: #1e40af;
+}
+
+.pr-rate {
+  font-weight: 700;
+  color: #16a34a;
+  font-size: 15px;
+}
+
+.pr-discount {
+  color: #d97706;
+  font-weight: 600;
+}
+
+.pr-example {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+}
+
+.pr-win {
+  color: #16a34a;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pr-lose {
+  color: #d97706;
+  font-size: 11px;
+}
+
+.pr-minmax {
+  padding: 8px 16px;
+  font-size: 12px;
+  color: #64748b;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.pr-minmax strong { color: #0f172a; }
+
+/* ── Dev Zone ─────────────────────────────────────────────── */
+.dev-zone {
+  max-width: 640px;
+  margin: 24px auto 0;
+  background: #fff;
+  border: 1.5px solid #fca5a5;
+  border-radius: 12px;
+  padding: 24px 28px;
+}
+
+.dev-zone-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #dc2626;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 12px;
+}
+
+.dev-zone-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.dev-zone-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.dev-zone-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 7px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Tahoma', 'Sarabun', sans-serif;
+  cursor: pointer;
+  transition: background .12s;
+}
+.dev-zone-btn:hover:not(:disabled) { background: #b91c1c; }
+.dev-zone-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Responsive */
+@media (max-width: 720px) {
+  .pr-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .profile-card-edit { padding: 24px 18px; }
+  .profile-row { grid-template-columns: 1fr; }
+  .profile-actions { flex-direction: column; }
+  .profile-btn-save,
+  .profile-btn-cancel { width: 100%; text-align: center; }
+}
+
+/* ── License Key card (แต่ละ user เห็นของตัวเอง) ─────────────── */
+.profile-license {
+  margin: 0 0 24px;
+  padding: 16px 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+.profile-license-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.profile-license-title { font-size: 14px; font-weight: 700; color: #0f172a; }
+.profile-license-badge {
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+.profile-license-badge-active    { background: #dcfce7; color: #166534; }
+.profile-license-badge-suspended { background: #fee2e2; color: #991b1b; }
+.profile-license-badge-expired   { background: #fef3c7; color: #92400e; }
+
+.profile-license-keyrow {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.profile-license-key {
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  align-items: center;
+  font-family: 'Courier New', ui-monospace, monospace;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #0f172a;
+  background: #fff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 14px;
+  word-break: break-all;
+  user-select: all;
+}
+.profile-license-copy {
+  flex-shrink: 0;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+.profile-license-copy:hover:not(:disabled) { background: #1d4ed8; }
+.profile-license-copy:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.profile-license-expiry { font-size: 12.5px; color: #64748b; }
+.profile-license-expiry strong { color: #0f172a; font-weight: 600; }
+
+/* ── PromptPay ของบัญชีนี้ (เฉพาะ admin) ──────────────────────── */
+.profile-payment {
+  margin: 0 0 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.profile-payment-desc {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: -4px 0 18px;
+}
+.profile-radio-row { display: flex; gap: 20px; }
+.profile-radio { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #374151; cursor: pointer; }
+
+/* ── LINE OA ของร้าน (เฉพาะ admin) ────────────────────────────── */
+.profile-line-badge {
+  margin-left: 10px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #64748b;
+  vertical-align: middle;
+}
+.profile-line-badge.ok { background: #e8f6ee; color: #0e8a4c; }
+.profile-webhook-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.profile-webhook-url {
+  flex: 1;
+  font-size: 12px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 9px 12px;
+  word-break: break-all;
+  color: #334155;
+}
+.profile-btn-verify {
+  padding: 10px 18px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #374151;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+.profile-btn-verify:hover:not(:disabled) { border-color: #0e8a4c; color: #0e8a4c; }
+.profile-btn-verify:disabled { opacity: 0.6; cursor: default; }

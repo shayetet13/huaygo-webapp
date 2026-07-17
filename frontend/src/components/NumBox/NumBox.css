@@ -1,0 +1,25 @@
+/**
+ * @file NumBox/NumBox.css
+ * @module components/NumBox
+ * @description Styles สำหรับ NumBox — ค่าจาก .num-box ใน html demo 1.css
+ */
+
+/* จาก .num-box */
+.num-box {
+  background: var(--numbox-bg);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 5px;
+  display: inline-block;
+  min-width: 38px;
+  font-weight: 600;
+  text-align: center;
+  font-size: var(--fs-base);
+  letter-spacing: 0.5px;
+}
+
+/* จาก .num-box.empty */
+.num-box.empty {
+  background: var(--numbox-bg);
+  opacity: 0.4;
+}

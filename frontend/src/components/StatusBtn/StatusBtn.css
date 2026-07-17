@@ -1,0 +1,27 @@
+/**
+ * @file StatusBtn/StatusBtn.css
+ * @module components/StatusBtn
+ * @description Styles สำหรับ Status Button — ค่าจาก .status-btn ใน html demo 1.css
+ */
+
+/* จาก .status-btn */
+.status-btn {
+  padding: 3px 10px;
+  border-radius: 5px;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: #fff;
+  border: none;
+  font-family: var(--font);
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* จาก .status-open */
+.status-btn.open   { background: var(--c-success); }
+
+/* จาก .status-closed */
+.status-btn.closed { background: var(--c-info); }
+
+/* เพิ่มเติม — สำหรับ resulted */
+.status-btn.resulted { background: var(--c-primary); }

@@ -1,0 +1,745 @@
+/**
+ * @file globals.css
+ * @module styles/globals
+ * @description Design tokens + base resets — shadcn minimal theme
+ *              Slate palette, white surfaces, blue-600 accent
+ */
+
+/* ── Google Font (Sarabun รองรับภาษาไทย) ─────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap');
+
+/* ── Reset ───────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── CSS Variables (shadcn / slate palette) ──────────────── */
+:root {
+
+  /* Font */
+  --font:    'Tahoma', 'Sarabun', sans-serif;
+  --fs-xs:   14px;
+  --fs-sm:   15px;
+  --fs-base: 16px;
+  --fs-md:   17px;
+  --fs-lg:   19px;
+  --fs-xl:   22px;
+  --fs-2xl:  28px;
+
+  /* ── Navbar — white, flat, border-bottom ─────────────── */
+  --nav-bg:     #ffffff;
+  --nav-h:      56px;
+  --nav-pad:    0;
+  --nav-border: 1px solid #e2e8f0;
+
+  /* Logo */
+  --logo-size: 20px;
+  --logo-dot:  #2563eb;
+
+  /* Menu links */
+  --menu-gap:      2px;
+  --menu-link-pad: 6px 14px;
+  --menu-radius:   6px;
+  --menu-hover:    #f1f5f9;
+
+  /* Active nav — blue pill */
+  --nav-active-bg:    #eff6ff;
+  --nav-active-color: #2563eb;
+  --nav-active-pad:   6px 14px;
+
+  /* User area */
+  --user-bg:      #f1f5f9;
+  --user-radius:  20px;
+  --avatar-size:  20px;
+  --avatar-bg:    #e2e8f0;
+  --avatar-color: #64748b;
+
+  /* ── Page background — all pages slate-50 ────────────── */
+  --bg-page:  #f8fafc;
+  --bg-home:  #f8fafc;
+  --bg-bet:   #f8fafc;
+  --bg-other: #f8fafc;
+
+  /* ── Container ───────────────────────────────────────── */
+  --container-max: 1180px;
+  --container-pad: 20px 15px 40px;
+
+  /* ── Colors — shadcn semantic ────────────────────────── */
+  --c-primary:  #2563eb;   /* blue-600 */
+  --c-teal:     #0891b2;   /* cyan-600 */
+  --c-success:  #16a34a;   /* green-600 */
+  --c-info:     #0891b2;
+  --c-warning:  #d97706;   /* amber-600 */
+  --c-danger:   #dc2626;   /* red-600 */
+  --c-green:    #16a34a;
+  --c-orange:   #ea580c;
+  --c-muted:    #64748b;   /* slate-500 */
+  --c-text:     #0f172a;   /* slate-900 */
+  --c-label:    #64748b;
+  --c-border:   #e2e8f0;   /* slate-200 */
+
+  /* ── Card — white + border ───────────────────────────── */
+  --card-bg:     #ffffff;
+  --card-radius: 8px;
+  --card-shadow: 0 1px 2px rgba(0,0,0,.05);
+  --card-border: 1px solid #e2e8f0;
+  --card-mb:     16px;
+
+  /* Card header */
+  --card-hd-color:  #0f172a;
+  --card-hd-pad:    12px 16px;
+  --card-hd-border: 1px solid #e2e8f0;
+  --card-hd-fs:     14px;
+  --card-body-pad:  16px 20px;
+
+  /* ── Table — slate-50 header ─────────────────────────── */
+  --tbl-hd-bg:     #f8fafc;
+  --tbl-hd-border: 1px solid #e2e8f0;
+  --tbl-row-sep:   1px solid #f1f5f9;
+  --tbl-row-hover: #f8fafc;
+
+  /* Category row */
+  --cat-bg:    #fefce8;   /* amber-50 */
+  --cat-color: #92400e;   /* amber-800 */
+
+  /* ── Num Box ─────────────────────────────────────────── */
+  --numbox-bg: #2563eb;
+
+  /* ── Lottery Card (แทงหวย) ───────────────────────────── */
+  --lcard-green-bg:   #f0fdf4;   /* green-50  — open */
+  --lcard-green-bd:   #bbf7d0;   /* green-200 */
+  --lcard-yellow-bg:  #fefce8;   /* amber-50  — closing */
+  --lcard-yellow-bd:  #fde68a;   /* amber-200 */
+  --lcard-notopen-bg: #f0f9ff;   /* sky-50    — not yet open */
+  --lcard-notopen-bd: #bae6fd;   /* sky-200 */
+  --lcard-closed-bg:  #f8fafc;   /* slate-50  — closed */
+  --lcard-closed-bd:  #e2e8f0;   /* slate-200 */
+
+  /* ── Section Title ───────────────────────────────────── */
+  --section-bg:    #eff6ff;   /* blue-50 */
+  --section-color: #2563eb;
+
+  /* ── Finance Tabs — white + underline ────────────────── */
+  --ftab-bg:           transparent;
+  --ftab-active-bg:    #ffffff;
+  --ftab-active-color: #2563eb;
+
+  /* ── Content Tabs (สังคมผู้แพ้) ─────────────────────── */
+  --ctab-color:        #64748b;
+  --ctab-active-color: #2563eb;
+  --ctab-active-bd:    2px solid #2563eb;
+
+  /* ── Status Tabs (โพยหวย) ───────────────────────────── */
+  --stab-all:     #2563eb;
+  --stab-waiting: #d97706;
+  --stab-win:     #16a34a;
+  --stab-lose:    #dc2626;
+  --stab-cancel:  #ea580c;
+
+  /* ── Action Bar ──────────────────────────────────────── */
+  --action-bar-bg:     #f8fafc;
+  --action-bar-border: 1px solid #e2e8f0;
+
+  /* ── Filter / Input ──────────────────────────────────── */
+  --input-border: #e2e8f0;
+  --input-radius: 6px;
+  --input-pad:    6px 10px;
+  --input-w:      140px;
+  --accent:       #2563eb;
+
+  /* ── Source Icons (สังคมผู้แพ้) ─────────────────────── */
+  --icon-close: #dc2626;
+  --icon-check: #16a34a;
+  --icon-link:  #2563eb;
+  --icon-size:  18px;
+
+  /* ── Action Buttons ──────────────────────────────────── */
+  --btn-select:   #2563eb;
+  --btn-deselect: #d97706;
+  --btn-cat:      #0891b2;
+  --btn-clear:    #d97706;
+
+  /* ── Profile Card ────────────────────────────────────── */
+  --balance-color: #16a34a;
+  --balance-fs:    28px;
+  --win-color:     #2563eb;
+  --win-fs:        24px;
+
+  /* ── Footer — slate-800 dark ─────────────────────────── */
+  --footer-bg:  #1e293b;
+  --footer-pad: 12px;
+
+  /* ── Page Title ──────────────────────────────────────── */
+  --page-title-color: #0f172a;
+  --page-title-fs:    20px;
+  --page-title-pad-l: 0;
+
+  /* ── Transitions ─────────────────────────────────────── */
+  --t:        .15s;
+  --t-normal: .2s;
+
+  /* ── Spacing ─────────────────────────────────────────── */
+  --sp-xs:  4px;  --sp-sm:  6px;  --sp-md:  8px;
+  --sp-lg:  12px; --sp-xl:  16px; --sp-2xl: 20px; --sp-3xl: 30px;
+}
+
+/* ── Base Body ───────────────────────────────────────────── */
+body {
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  color: var(--c-text);
+  min-height: 100vh;
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Sticky footer — #root กินความสูงเต็มจอเป็นอย่างน้อย, เนื้อหาหลัก
+ * (ทุกอย่างยกเว้น footer) ยืด flex:1 ดัน footer ให้ติดล่างสุดเสมอ
+ * แม้หน้าเนื้อหาสั้นกว่าความสูงจอ ── */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+#root > .app-main { flex: 1; }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  cursor: pointer;
+}
+
+/* ── Shared Utility Classes ──────────────────────────────── */
+
+/* Container */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--container-pad);
+}
+
+/* Page title */
+.page-title {
+  color: var(--page-title-color);
+  font-size: var(--page-title-fs);
+  font-weight: 700;
+  margin: 16px 0 14px;
+  padding-left: 0;
+  letter-spacing: -0.3px;
+}
+
+/* Footer */
+.footer {
+  background: var(--footer-bg);
+  color: #94a3b8;
+  text-align: center;
+  padding: var(--footer-pad);
+  font-size: var(--fs-sm);
+  margin-top: 20px;
+}
+
+/* Card */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  border: var(--card-border);
+  box-shadow: var(--card-shadow);
+  margin-bottom: var(--card-mb);
+  overflow: hidden;
+}
+
+/* Card header */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--card-hd-color);
+  font-weight: 600;
+  padding: var(--card-hd-pad);
+  font-size: var(--card-hd-fs);
+  border-bottom: var(--card-hd-border);
+}
+
+.card-header.collapse::before {
+  content: '▼';
+  color: var(--c-muted);
+  font-size: 12px;
+}
+
+/* Card body */
+.card-body {
+  padding: var(--card-body-pad);
+}
+
+/* Filter row */
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Radio item */
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-base);
+  color: var(--c-text);
+  cursor: pointer;
+}
+
+.radio-item input[type="radio"] {
+  margin: 0;
+  accent-color: var(--accent);
+  width: 14px;
+  height: 14px;
+}
+
+.radio-item.checked { font-weight: 500; }
+
+/* Date input */
+.date-input {
+  border: 1px solid var(--input-border);
+  border-radius: var(--input-radius);
+  padding: var(--input-pad);
+  font-size: var(--fs-base);
+  width: var(--input-w);
+  background: #fff;
+  color: var(--c-text);
+  font-family: var(--font);
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+}
+
+/* Search button */
+.search-btn {
+  background: var(--c-primary);
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: var(--input-radius);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-base);
+  font-weight: 500;
+  margin-top: 6px;
+  transition: background var(--t);
+}
+
+.search-btn::before { content: '🔍'; font-size: var(--fs-sm); }
+.search-btn:hover { background: #1d4ed8; }
+
+/* Empty state */
+.empty-state {
+  background: #fff;
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--c-muted);
+  font-size: var(--fs-md);
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
+}
+
+/* Check link */
+.check-link {
+  color: var(--c-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-base);
+}
+.check-link::before { content: '🔍'; font-size: var(--fs-sm); }
+.check-link:hover { text-decoration: underline; }
+
+/* Action bar (global, used in globals scope only) */
+.action-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 16px;
+}
+
+/* Action buttons */
+.action-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: var(--fs-base);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: 500;
+  transition: opacity var(--t);
+}
+.action-btn:hover { opacity: .88; }
+.action-btn.select-all   { background: var(--btn-select); }
+.action-btn.deselect-all { background: var(--btn-deselect); }
+.action-btn.cat          { background: var(--btn-cat); }
+
+/* Two-col layout */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: var(--sp-3xl);
+}
+
+/* Group title */
+.group-title {
+  color: var(--c-primary);
+  font-weight: 600;
+  font-size: var(--fs-md);
+  margin-bottom: 8px;
+}
+
+/* Checkbox grid */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px 16px;
+}
+.checkbox-grid.wide  { grid-template-columns: repeat(5, 1fr); }
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-base);
+  color: var(--c-text);
+  cursor: pointer;
+}
+.checkbox-item input[type="checkbox"] {
+  margin: 0;
+  accent-color: var(--accent);
+  width: 14px;
+  height: 14px;
+}
+
+.external-icon {
+  color: var(--c-primary);
+  margin-left: 4px;
+  font-size: var(--fs-xs);
+}
+
+/* Result info */
+.result-info {
+  background: #f8fafc;
+  color: var(--c-text);
+  font-weight: 600;
+  padding: 10px 16px;
+  font-size: var(--fs-base);
+  border-bottom: 1px solid var(--c-border);
+}
+
+/* Lottery group */
+.lottery-group {
+  margin-bottom: 14px;
+}
+
+/* ── Flag Base ────────────────────────────────────────────── */
+.flag {
+  border-radius: 3px;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,.12);
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  vertical-align: middle;
+}
+
+.flag::before,
+.flag::after {
+  position: absolute;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ── ขนาดธง ─────────────────────────────────────────────── */
+.flag-sm { width: 52px;  height: 36px; }
+.flag-md { width: 60px;  height: 42px; }
+.flag-lg { width: 80px;  height: 56px; border-radius: 4px; }
+.flag-xl { width: 64px;  height: 44px; border-radius: 3px; }
+
+/* ── ธงชาติ CSS-only ─────────────────────────────────────── */
+
+.flag-th {
+  background: linear-gradient(180deg,
+    #ed1c24 0 33.3%, #fff 33.3% 66.6%, #241d4f 66.6%);
+}
+
+.flag-vn { background: #da251d; }
+.flag-vn::after {
+  content: '★';
+  color: #ffd700;
+  font-size: 60%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -54%);
+  text-shadow: 0 0 1px rgba(0,0,0,.2);
+}
+
+.flag-laos {
+  background: linear-gradient(180deg,
+    #ce1126 0 28%, #002868 28% 72%, #ce1126 72%);
+}
+.flag-laos::after {
+  content: '';
+  width: 36%; height: 55%;
+  background: #fff;
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.flag-mal {
+  background: linear-gradient(180deg,
+    #cc0001 0 7.1%, #fff 7.1% 14.3%,
+    #cc0001 14.3% 21.4%, #fff 21.4% 28.6%,
+    #cc0001 28.6% 35.7%, #fff 35.7% 42.9%,
+    #cc0001 42.9% 50%, #fff 50% 57.1%,
+    #cc0001 57.1% 64.3%, #fff 64.3% 71.4%,
+    #cc0001 71.4% 78.6%, #fff 78.6% 85.7%,
+    #cc0001 85.7% 92.9%, #fff 92.9%);
+}
+.flag-mal::before {
+  content: '';
+  width: 45%; height: 57%;
+  background: #010066;
+  top: 0; left: 0;
+}
+.flag-mal::after {
+  content: '☽';
+  color: #fcd116;
+  font-size: 75%;
+  top: 3%; left: 2%;
+  line-height: 1;
+}
+
+.flag-jp { background: #fff; }
+.flag-jp::after {
+  content: '';
+  width: 36%; height: 55%;
+  background: #bc002d;
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.flag-cn { background: #ee1c25; }
+.flag-cn::after {
+  content: '★';
+  color: #ffd700;
+  font-size: 55%;
+  top: 12%; left: 6%;
+  line-height: 1;
+}
+.flag-cn::before {
+  content: '★';
+  color: #ffd700;
+  font-size: 30%;
+  top: 6%; left: 30%;
+  line-height: 1;
+}
+
+.flag-hk { background: #de2110; }
+.flag-hk::after {
+  content: '✿';
+  color: #fff;
+  font-size: 70%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -52%);
+}
+
+.flag-sg {
+  background: linear-gradient(180deg, #ef3340 50%, #fff 50%);
+}
+.flag-sg::before {
+  content: '☽';
+  color: #fff;
+  font-size: 60%;
+  top: 4%; left: 6%;
+  line-height: 1;
+}
+.flag-sg::after {
+  content: '★';
+  color: #fff;
+  font-size: 32%;
+  top: 6%; left: 34%;
+  line-height: 1;
+}
+
+.flag-kr { background: #fff; }
+.flag-kr::after {
+  content: '☯';
+  color: #cd2e3a;
+  font-size: 55%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.flag-tw { background: #fe0000; }
+.flag-tw::before {
+  content: '';
+  width: 45%; height: 57%;
+  background: #000095;
+  top: 0; left: 0;
+}
+.flag-tw::after {
+  content: '✦';
+  color: #fff;
+  font-size: 40%;
+  top: 4%; left: 4%;
+  line-height: 1;
+}
+
+.flag-de {
+  background: linear-gradient(180deg,
+    #000 0 33.3%, #dd0000 33.3% 66.6%, #ffce00 66.6%);
+}
+
+.flag-ru {
+  background: linear-gradient(180deg,
+    #fff 0 33.3%, #0039a6 33.3% 66.6%, #d52b1e 66.6%);
+}
+
+.flag-uk { background: #00247d; }
+.flag-uk::after {
+  content: '';
+  width: 100%; height: 30%;
+  background: #cf142b;
+  box-shadow: 0 0 0 8% #fff;
+  top: 35%; left: 0;
+}
+.flag-uk::before {
+  content: '';
+  width: 22%; height: 100%;
+  background: #cf142b;
+  box-shadow: 0 0 0 8% #fff;
+  top: 0; left: 39%;
+}
+
+.flag-us {
+  background: linear-gradient(180deg,
+    #b22234 0 7.7%, #fff 7.7% 15.4%,
+    #b22234 15.4% 23.1%, #fff 23.1% 30.8%,
+    #b22234 30.8% 38.5%, #fff 38.5% 46.2%,
+    #b22234 46.2% 53.8%, #fff 53.8% 61.5%,
+    #b22234 61.5% 69.2%, #fff 69.2% 76.9%,
+    #b22234 76.9% 84.6%, #fff 84.6% 92.3%,
+    #b22234 92.3% 100%);
+}
+.flag-us::before {
+  content: '';
+  width: 40%; height: 54%;
+  background: #3c3b6e;
+  top: 0; left: 0;
+}
+.flag-us::after {
+  content: '★';
+  color: #fff;
+  font-size: 26%;
+  top: 6%; left: 4%;
+  line-height: 1;
+}
+
+.flag-eg {
+  background: linear-gradient(180deg,
+    #ce1126 0 33.3%, #fff 33.3% 66.6%, #000 66.6%);
+}
+.flag-eg::after {
+  content: '🦅';
+  font-size: 35%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  filter: sepia(1) saturate(3) hue-rotate(10deg);
+}
+
+.flag-ind,
+.flag-in {
+  background: linear-gradient(180deg,
+    #ff9933 0 33.3%, #fff 33.3% 66.6%, #138808 66.6%);
+}
+.flag-in::after,
+.flag-ind::after {
+  content: '⊙';
+  color: #000080;
+  font-size: 55%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ── Img Logo (หวยไทย icons) ─────────────────────────────── */
+.img-logo {
+  background: #f1f5f9;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: bold;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.img-logo.glo {
+  background: #00a651;
+  color: #fff;
+  border-color: #00a651;
+}
+.img-logo.glo::before { content: 'GLO'; }
+
+.img-logo.savings {
+  background: #e91e63;
+  color: #fff;
+  border-color: #e91e63;
+}
+
+/* ── Responsive Breakpoints ──────────────────────────────── */
+@media (max-width: 1024px) {
+  .card-grid { grid-template-columns: repeat(3, 1fr); }
+  .two-col   { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  :root { --container-pad: 12px 10px 30px; }
+  .card-grid        { grid-template-columns: repeat(2, 1fr); }
+  .checkbox-grid    { grid-template-columns: repeat(3, 1fr); }
+  .checkbox-grid.wide { grid-template-columns: repeat(4, 1fr); }
+  .topnav-inner     { padding: 0 12px; }
+  .topnav-menu a    { padding: 5px 10px; font-size: var(--fs-base); }
+  .topnav-user-name { display: none; }
+}
+
+@media (max-width: 480px) {
+  .card-grid        { grid-template-columns: 1fr 1fr; }
+  .checkbox-grid    { grid-template-columns: repeat(2, 1fr); }
+  .checkbox-grid.wide { grid-template-columns: repeat(3, 1fr); }
+  .filter-row       { gap: 12px; }
+  .two-col          { gap: 16px; }
+}
+
+@media (max-width: 360px) {
+  .card-grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,37 @@
+# dependencies
+node_modules/
+**/node_modules/
+
+# builds
+dist/
+**/dist/
+.wrangler/
+**/.wrangler/
+coverage/
+**/coverage/
+
+# env / secrets — never commit
+.env
+.env.*
+!.env.example
+**/.env
+!**/.env.example
+
+# local data (SQLite DB + LINE uploads)
+data/
+backend/huay.db
+backend/dev.log
+*.db
+*.db-shm
+*.db-wal
+
+# python
+ocr-service/venv/
+__pycache__/
+*.pyc
+
+# logs & backups
+*.log
+*.bak
+*.bak-*
+*.tsbuildinfo

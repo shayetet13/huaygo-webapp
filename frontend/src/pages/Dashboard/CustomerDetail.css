@@ -1,0 +1,60 @@
+/**
+ * @file pages/Dashboard/CustomerDetail.css
+ * @page ประวัติโพยของลูกค้ารายคน (/dashboard/customer/:name)
+ * @description ตามระบบ flat เดียวกับ Dashboard.css (ตัวแปร --db-* ประกาศบน .admdb-app ซึ่งหน้านี้
+ *   ใช้เป็น wrapper อยู่แล้ว) — การ์ดขาวขอบ 1px ไม่มีเงา/gradient, prefix cdet- กันชนกัน
+ */
+
+.cdet-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--db-surface);
+  border: 1px solid var(--db-border);
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--db-text-2);
+  cursor: pointer;
+  font-family: inherit;
+  margin-bottom: 12px;
+}
+.cdet-back-btn:hover { color: var(--db-accent); border-color: var(--db-accent); }
+
+.cdet-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--db-surface);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+}
+.cdet-profile-avatar { flex-shrink: 0; border: 1px solid var(--db-border); border-radius: 50%; }
+.cdet-profile-info { min-width: 0; }
+.cdet-profile-name { font-size: 18px; font-weight: 700; letter-spacing: -0.2px; }
+.cdet-profile-id { font-size: 12.5px; color: var(--db-text-3); margin-top: 2px; }
+.cdet-profile-lotteries { font-size: 12px; color: var(--db-text-2); margin-top: 8px; }
+
+.cdet-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.cdet-stat {
+  background: var(--db-surface);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius);
+  padding: 13px 16px;
+}
+.cdet-stat-label { color: var(--db-text-2); font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+.cdet-stat-value { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; font-variant-numeric: tabular-nums; }
+.cdet-stat-win .cdet-stat-value { color: var(--db-green); }
+.cdet-stat-lose .cdet-stat-value { color: var(--db-red); }
+
+@media (max-width: 900px) {
+  .cdet-stats-grid { grid-template-columns: repeat(2, 1fr); }
+}

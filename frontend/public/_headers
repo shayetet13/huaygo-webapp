@@ -1,0 +1,15 @@
+# Cloudflare Pages security + cache headers (static assets เท่านั้น — /api/* ได้ header จาก backend/helmet)
+# CSP: script ตัวเองล้วน (bundle), style ตัวเอง + inline attr + Google Fonts (Sarabun),
+#      img เปิด https: เพราะไอคอนตลาดหวยมาจาก CDN ภายนอก (huayruay),
+#      connect เปิดโดเมน LINE ให้ liff.init/getIDToken ทำงานใน LIFF ได้
+
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.line.me https://access.line.me https://*.line.me https://*.line-scdn.net; object-src 'none'; base-uri 'self'; frame-ancestors 'self'
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

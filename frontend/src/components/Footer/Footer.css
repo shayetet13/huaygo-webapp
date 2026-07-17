@@ -1,0 +1,15 @@
+/**
+ * @file Footer/Footer.css
+ * @module components/Footer
+ * @description Styles สำหรับ Footer — ค่าจาก .footer ใน html demo 1.css, 2.css, 5.css
+ */
+
+/* จาก .footer */
+.footer {
+  background: var(--footer-bg);
+  color: #94a3b8;
+  text-align: center;
+  padding: var(--footer-pad);
+  font-size: var(--fs-sm);
+  margin-top: 20px;
+}

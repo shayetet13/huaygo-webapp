@@ -1,0 +1,10 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+# 3.3.1 (latest as of writing) crashes the text-detection model with
+# "NotImplementedError: ConvertPirAttribute2RuntimeAttribute not support
+# [pir::ArrayAttribute<pir::DoubleAttribute>]" in its oneDNN CPU backend —
+# confirmed 3.0.0 does not have this regression. Revisit pinning to a newer
+# release once this is fixed upstream.
+paddlepaddle==3.0.0
+paddleocr==3.7.0

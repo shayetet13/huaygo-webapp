@@ -1,0 +1,736 @@
+/**
+ * @file pages/Slips/Slips.css
+ * @page โพยหวย (/slips)
+ * @description Styles — shadcn minimal theme
+ */
+
+.page-slips {
+  background: var(--bg-other);
+  min-height: 100vh;
+}
+
+/* Date header */
+.date-header {
+  background: #fff;
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  color: var(--c-text);
+  font-weight: 600;
+  padding: 10px 16px;
+  font-size: var(--fs-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 8px;
+}
+
+/* Status tabs */
+.status-tabs {
+  display: flex;
+  gap: 6px;
+}
+.status-tab {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: none;
+  transition: background var(--t), color var(--t);
+}
+.status-tab.all     { background: var(--stab-all);     color: #fff; border-color: var(--stab-all); }
+.status-tab.waiting { background: #fff; color: var(--stab-waiting); border-color: var(--stab-waiting); }
+.status-tab.win     { background: #fff; color: var(--stab-win);     border-color: var(--stab-win); }
+.status-tab.lose    { background: #fff; color: var(--stab-lose);    border-color: var(--stab-lose); }
+.status-tab.cancel  { background: #fff; color: var(--stab-cancel);  border-color: var(--stab-cancel); }
+
+/* Action bar — white, clean border-bottom */
+.action-bar {
+  background: #fff;
+  border: var(--card-border);
+  color: var(--c-text);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+}
+.action-tabs {
+  display: flex;
+  gap: 6px;
+}
+.action-tab {
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  background: none;
+  border: 1px solid transparent;
+  color: var(--c-muted);
+  font-weight: 500;
+  transition: background var(--t), color var(--t);
+}
+.action-tab.active {
+  background: var(--nav-active-bg);
+  color: var(--c-primary);
+  border-color: #bfdbfe;
+  font-weight: 600;
+}
+.action-buttons {
+  display: flex;
+  gap: 6px;
+}
+.btn-search-slip {
+  background: var(--c-primary);
+  color: #fff;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background var(--t);
+}
+.btn-search-slip:hover { background: #1d4ed8; }
+
+.btn-clear {
+  background: var(--c-warning);
+  color: #fff;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Empty state */
+.empty-state {
+  background: #fff;
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--c-muted);
+  font-size: var(--fs-md);
+  border: var(--card-border);
+  border-top: none;
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
+  box-shadow: var(--card-shadow);
+}
+
+/* Legend */
+.slip-legend {
+  margin-top: 18px;
+  padding-left: 4px;
+  color: var(--c-muted);
+  font-size: 15px;
+  line-height: 1.8;
+}
+.slip-legend .legend-title  { color: var(--c-primary); font-weight: 600; }
+.slip-legend .legend-refund { color: var(--c-warning); }
+.slip-legend .legend-cancel { color: var(--c-danger); }
+
+/* Bet results table — list view */
+.bet-table-wrap {
+  border: var(--card-border);
+  border-top: none;
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  background: #fff;
+  margin-bottom: var(--card-mb);
+}
+
+.bet-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+.bet-table thead th {
+  background: var(--tbl-hd-bg);
+  color: var(--c-muted);
+  font-weight: 500;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: var(--fs-sm);
+  border-bottom: var(--tbl-hd-border);
+}
+.bet-table tbody td {
+  padding: 9px 8px;
+  text-align: center;
+  border-bottom: var(--tbl-row-sep);
+  font-size: var(--fs-base);
+  color: var(--c-text);
+}
+.bet-table tbody tr:hover { background: var(--tbl-row-hover); }
+.bet-table .empty-td      { padding: 30px 8px; color: var(--c-muted); }
+
+/* ── Row background ตามสถานะ ──────────────────────────────────
+ * จงใจเลือกเฉดที่ "คนละสี" กับปุ่ม ดูรายละเอียด (เขียว #f0fdf4)
+ * และปุ่ม ลบ (แดง #fef2f2) ในแถวเดียวกัน เพื่อให้แยะแยกพื้นแถว
+ * กับปุ่มได้ทันทีโดยไม่ตาลาย */
+.bet-table tbody tr.row-pending   { background: #fffbeb; box-shadow: inset 3px 0 0 #f59e0b; }
+.bet-table tbody tr.row-win       { background: #f0f9ff; box-shadow: inset 3px 0 0 #0ea5e9; }
+.bet-table tbody tr.row-lose      { background: #f5f3ff; box-shadow: inset 3px 0 0 #8b5cf6; }
+.bet-table tbody tr.row-cancelled { background: #fff7ed; box-shadow: inset 3px 0 0 #fb923c; }
+.bet-table tbody tr.row-pending:hover   { background: #fef3c7; }
+.bet-table tbody tr.row-win:hover       { background: #e0f2fe; }
+.bet-table tbody tr.row-lose:hover      { background: #ede9fe; }
+.bet-table tbody tr.row-cancelled:hover { background: #ffedd5; }
+
+/* Cancel button inside table */
+.btn-cancel-bet {
+  background: var(--c-danger);
+  color: #fff;
+  border: none;
+  padding: 3px 10px;
+  border-radius: 5px;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: opacity var(--t);
+}
+.btn-cancel-bet:hover { opacity: .85; }
+
+/* ── Buyer name chip ─────────────────────────────────────────── */
+.buyer-name {
+  display: inline-block;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Status badge inline */
+.slip-status-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
+/* Row action buttons wrapper */
+.slip-row-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Detail button */
+.btn-detail {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--t);
+}
+.btn-detail:hover { background: #dcfce7; }
+
+/* Delete button */
+.btn-delete-slip {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--t);
+}
+.btn-delete-slip:hover { background: #fee2e2; }
+
+/* ── Customer Detail Modal ───────────────────────────────────── */
+.cdm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  animation: cdm-fade .18s ease;
+}
+
+@keyframes cdm-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.cdm-box {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 860px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, .35);
+  animation: cdm-slide .22s ease;
+}
+
+@keyframes cdm-slide {
+  from { transform: translateY(18px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Header ── */
+.cdm-header {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 18px 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.cdm-name {
+  color: var(--c-primary);
+  font-size: 18.9px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  line-height: 1.2;
+}
+
+.cdm-sub {
+  color: var(--c-muted);
+  font-size: 12.6px;
+  margin-top: 3px;
+  font-weight: 400;
+}
+
+.cdm-close {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 13.65px;
+  flex-shrink: 0;
+  transition: background var(--t), color var(--t);
+}
+.cdm-close:hover { background: #e2e8f0; color: #334155; }
+
+/* ── Stats row ── */
+.cdm-stats {
+  display: flex;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.cdm-stat {
+  flex: 1;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-right: 1px solid #e2e8f0;
+}
+.cdm-stat:last-child { border-right: none; }
+
+.cdm-stat-label {
+  color: #64748b;
+  font-size: 11.55px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+.cdm-stat-val {
+  font-size: 17.85px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.cdm-val-total   { color: var(--c-text); }
+.cdm-val-bet     { color: #2563eb; }
+.cdm-val-win     { color: #16a34a; }
+.cdm-val-pending { color: #d97706; }
+
+/* ── Body / table ── */
+.cdm-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cdm-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px;
+  color: var(--c-muted);
+  font-size: calc(var(--fs-md) * 1.05);
+}
+
+@keyframes cdm-spin {
+  to { transform: rotate(360deg); }
+}
+.cdm-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e2e8f0;
+  border-top-color: var(--c-primary);
+  border-radius: 50%;
+  animation: cdm-spin .7s linear infinite;
+}
+
+.cdm-table-wrap {
+  overflow-y: auto;
+  flex: 1;
+  overscroll-behavior: contain;
+}
+
+.cdm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: calc(var(--fs-base) * 1.05);
+}
+
+.cdm-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.cdm-table thead th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  padding: 10px 12px;
+  text-align: center;
+  font-size: calc(var(--fs-sm) * 1.05);
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.cdm-table tbody td {
+  padding: 9px 12px;
+  text-align: center;
+  border-bottom: 1px solid #f1f5f9;
+  color: var(--c-text);
+}
+
+.cdm-table tbody tr:hover { background: #f8fafc; }
+.cdm-table tbody tr:last-child td { border-bottom: none; }
+
+/* ── Row background ตามสถานะ (หน้ารายละเอียดลูกค้า) ──────────── */
+.cdm-table tbody tr.row-pending   { background: #fffbeb; box-shadow: inset 3px 0 0 #f59e0b; }
+.cdm-table tbody tr.row-win       { background: #f0f9ff; box-shadow: inset 3px 0 0 #0ea5e9; }
+.cdm-table tbody tr.row-lose      { background: #f5f3ff; box-shadow: inset 3px 0 0 #8b5cf6; }
+.cdm-table tbody tr.row-cancelled { background: #fff7ed; box-shadow: inset 3px 0 0 #fb923c; }
+.cdm-table tbody tr.row-pending:hover   { background: #fef3c7; }
+.cdm-table tbody tr.row-win:hover       { background: #e0f2fe; }
+.cdm-table tbody tr.row-lose:hover      { background: #ede9fe; }
+.cdm-table tbody tr.row-cancelled:hover { background: #ffedd5; }
+
+.cdm-number {
+  font-weight: 800;
+  font-size: 15.75px;
+  letter-spacing: 1px;
+  color: #1e40af;
+}
+
+.cdm-td-date { white-space: nowrap; color: #64748b; font-size: calc(var(--fs-sm) * 1.05); }
+.cdm-td-num  { font-variant-numeric: tabular-nums; }
+
+.cdm-status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: calc(var(--fs-xs) * 1.05);
+  font-weight: 700;
+}
+
+/* ปุ่มลบโพย (เฉพาะที่ยังรอผล) ในตารางรายละเอียดลูกค้า */
+.cdm-del-btn {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--t, .15s);
+}
+.cdm-del-btn:hover:not(:disabled) { background: #fee2e2; }
+.cdm-del-btn:disabled { opacity: .5; cursor: not-allowed; }
+.cdm-del-na { color: #cbd5e1; font-size: 13px; }
+
+.cdm-empty {
+  text-align: center;
+  color: #94a3b8;
+  padding: 40px 20px;
+  font-size: calc(var(--fs-md) * 1.05);
+}
+
+/* Clickable customer name in users table */
+.btn-customer-name {
+  background: none;
+  border: none;
+  padding: 3px 0;
+  font-size: var(--fs-base);
+  font-weight: 700;
+  color: var(--c-primary);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: #bfdbfe;
+  transition: color var(--t);
+}
+.btn-customer-name:hover { color: #1d4ed8; text-decoration-color: var(--c-primary); }
+
+/* Note text ใต้ประเภทหวย */
+.slip-note {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+
+/* ── Payout tab — chips / badges ───────────────────────────── */
+.payout-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+
+.payout-lot-chip {
+  background: #f0f9ff;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.payout-num-chip {
+  background: #fef9c3;
+  color: #854d0e;
+  border: 1px solid #fde047;
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.payout-more-chip {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.payout-pay-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1.5px solid transparent;
+}
+.payout-pay-badge.payout-pay-done    { background: #dcfce7; color: #15803d; border-color: #86efac; }
+.payout-pay-badge.payout-pay-pending { background: #fff7ed; color: #c2410c; border-color: #fdba74; }
+
+/* ── Payout Detail Modal ────────────────────────────────────── */
+.pdm-box {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 880px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, .35);
+  animation: cdm-slide .22s ease;
+}
+
+/* ── Payment strip ── */
+.pdm-pay-strip {
+  background: linear-gradient(135deg, #065f46 0%, #059669 60%, #10b981 100%);
+  padding: 18px 24px;
+  flex-shrink: 0;
+}
+
+.pdm-pay-strip--done {
+  background: linear-gradient(135deg, #14532d 0%, #16a34a 100%);
+}
+
+.pdm-pay-action {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.pdm-pay-amount {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.pdm-pay-amount-lbl {
+  color: rgba(255, 255, 255, .75);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.pdm-pay-amount-val {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.pdm-pay-btn {
+  background: #fff;
+  color: #065f46;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--t), transform .15s ease, box-shadow .15s ease;
+  font-family: var(--font-th);
+  white-space: nowrap;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .2);
+  flex-shrink: 0;
+}
+.pdm-pay-btn:hover:not(:disabled) {
+  background: #f0fdf4;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .25);
+}
+.pdm-pay-btn:active:not(:disabled) { transform: translateY(0); }
+.pdm-pay-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+.pdm-pay-warn {
+  color: rgba(255, 255, 255, .65);
+  font-size: 12px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* Done / confirmed state */
+.pdm-pay-done {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pdm-pay-done-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, .4);
+}
+
+.pdm-pay-done-title {
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.pdm-pay-done-sub {
+  color: rgba(255, 255, 255, .75);
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+/* ── Day selector ───────────────────────────────────────────── */
+.day-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.day-pill {
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.day-pill:hover { background: #e2e8f0; }
+.day-pill.active { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+.day-pill.archived { color: #16a34a; border-color: #bbf7d0; background: #f0fdf4; }
+.day-pill.archived.active { background: #16a34a; color: #fff; border-color: #16a34a; }
+
+.btn-archive {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid #a3a3a3;
+  background: #f5f5f5;
+  color: #374151;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-archive:hover:not(:disabled) { background: #e5e7eb; }
+.btn-archive:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .date-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .status-tabs { flex-wrap: wrap; }
+  .bet-table thead th, .bet-table tbody td { padding: 7px 5px; font-size: var(--fs-xs); }
+
+  .cdm-box { max-height: 95vh; border-radius: 12px; }
+  .cdm-stats { flex-wrap: wrap; }
+  .cdm-stat { min-width: 50%; border-right: none; border-bottom: 1px solid #e2e8f0; }
+  .cdm-name { font-size: 16.8px; }
+  .cdm-table thead th, .cdm-table tbody td { padding: 7px 8px; font-size: calc(var(--fs-xs) * 1.05); }
+
+  .user-group-header { flex-direction: column; align-items: flex-start; }
+  .user-group-right  { width: 100%; justify-content: flex-end; }
+}

@@ -1,0 +1,7 @@
+tunnel: a5c3fc19-264a-4df8-b319-1a43caeceee6
+credentials-file: C:\Users\Administrator\.cloudflared\a5c3fc19-264a-4df8-b319-1a43caeceee6.json
+
+ingress:
+  - hostname: huay-webhook.nexapos.io
+    service: http://localhost:3001
+  - service: http_status:404

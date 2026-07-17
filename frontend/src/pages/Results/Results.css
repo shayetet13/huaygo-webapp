@@ -1,0 +1,148 @@
+/**
+ * @file pages/Results/Results.css
+ * @page ตรวจผลรางวัล (/results)
+ * @description Styles — shadcn minimal theme
+ */
+
+.page-results {
+  background: var(--bg-other);
+  min-height: 100vh;
+}
+
+/* Section title */
+.results-section-title {
+  color: var(--c-primary);
+  font-weight: 600;
+  font-size: var(--fs-md);
+  margin: 16px 0 8px;
+  padding-left: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.results-section-title::before {
+  content: '★';
+  color: var(--c-warning);
+}
+
+/* Results table — table-layout: fixed ทำให้ทุก section มี column width เท่ากัน */
+.results-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+/* กำหนด width แต่ละ column เป็น % ให้ทุก section ตรงกันและสมดุล */
+.results-table col.col-name   { width: 32%; }
+.results-table col.col-date   { width: 14%; }
+.results-table col.col-num    { width: 11%; }
+.results-table col.col-action { width: 13%; }
+
+.results-table thead th {
+  background: var(--tbl-hd-bg);
+  color: var(--c-muted);
+  font-weight: 500;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: var(--fs-sm);
+  border-bottom: var(--tbl-hd-border);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.results-table tbody td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: var(--tbl-row-sep);
+  font-size: var(--fs-base);
+  color: var(--c-text);
+  overflow: hidden;
+}
+.results-table tbody tr:hover { background: var(--tbl-row-hover); }
+
+/* Lottery name cell — fixed icon slot so text always starts at same X */
+.result-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 12px !important;
+  text-align: left;
+}
+
+/* Icon slot: fixed width = flag-sm width (52px) so logo icons are centered too */
+.result-icon-slot {
+  width: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Logo icon inside slot */
+.result-icon-slot .img-logo-bet {
+  width: 28px;
+  height: 28px;
+  font-size: 8px;
+}
+
+.result-name-text {
+  white-space: nowrap;
+}
+
+/* Check link */
+.check-link {
+  color: var(--c-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-base);
+}
+.check-link::before { content: '🔍'; font-size: 14px; }
+.check-link:hover { text-decoration: underline; }
+
+/* Results card */
+.results-card {
+  background: #fff;
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  margin-bottom: var(--card-mb);
+  overflow: hidden;
+}
+
+/* ── Live indicator ─────────────────────────────────────────── */
+.live-dot {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+  transition: color var(--t), transform var(--t);
+  user-select: none;
+}
+.live-dot--flash {
+  color: #22c55e;
+  transform: scale(1.15);
+}
+
+.synced-label {
+  font-size: 11px;
+  color: var(--c-muted);
+}
+
+/* ── Icon image ─────────────────────────────────────────────── */
+.lottery-icon-img {
+  width: 43px;
+  height: 29px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+  .results-table thead th,
+  .results-table tbody td {
+    padding: 8px 4px;
+    font-size: 14px;
+  }
+}
