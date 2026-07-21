@@ -9,9 +9,14 @@
 /** Postgres คืน timestamp เป็น "2026-07-16 14:08:58.384542+00" — JS Date parse ตรงๆ ไม่ผ่าน
  * (เศษวินาที 6 หลักเกินที่ JS รองรับ [3 หลัก] และ offset "+00" ไม่มี ":00" ต่อท้าย) ทำให้
  * Invalid Date เงียบๆ แล้วโค้ดที่เรียกใช้ fallback ไปโชว์ string ดิบแทน ฟังก์ชันนี้ normalize
- * ให้ parse ผ่านเสมอ ใช้ safe กับ ISO string ปกติด้วย (no-op ถ้าไม่มีอะไรต้องแก้) */
+ * ให้ parse ผ่านเสมอ ใช้ safe กับ ISO string ปกติด้วย (no-op ถ้าไม่มีอะไรต้องแก้)
+ *
+ * ระวัง: ค่าแบบวันที่ล้วนไม่มีเวลา เช่น draw_date = "2026-07-18" ต้องข้าม fixup พวกนี้ไปเลย —
+ * regex offset ด้านล่างจะไปแมตช์ "-18" (วันที่) เข้าใจผิดว่าเป็น timezone offset แล้วต่อ ":00"
+ * ให้กลายเป็น "2026-07-18:00" ที่ parse ไม่ผ่าน (Invalid Date -> NaN/NaN/NaN) */
 function parsePgTimestamp(raw: string): Date {
   let s = raw.trim().replace(' ', 'T')
+  if (!s.includes('T')) return new Date(s)  // วันที่ล้วน ไม่มีเวลา — ไม่มี offset ให้แก้
   s = s.replace(/(\.\d{3})\d+/, '$1')       // ตัดเศษวินาทีเหลือ 3 หลัก (milliseconds)
   s = s.replace(/([+-]\d{2})$/, '$1:00')    // +00 -> +00:00
   return new Date(s)
