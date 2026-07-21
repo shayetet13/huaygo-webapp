@@ -583,9 +583,9 @@ router.get('/days', requireShop, async (req, res, next) => {
         COUNT(*) AS bet_count,
         SUM(CASE WHEN b.status = 'pending' THEN 1 ELSE 0 END) AS pending_count,
         SUM(CASE WHEN b.status = 'win' AND b.paid = 0 THEN 1 ELSE 0 END) AS unpaid_wins,
-        CASE WHEN ad.date IS NOT NULL THEN 1 ELSE 0 END AS is_archived
+        CASE WHEN MAX(ad.date) IS NOT NULL THEN 1 ELSE 0 END AS is_archived
       FROM bets b
-      LEFT JOIN archived_dates ad ON ad.date = date(b.created_at) AND ad.shop_id = b.shop_id
+      LEFT JOIN archived_dates ad ON ad.date = date(b.created_at)::text AND ad.shop_id = b.shop_id
       WHERE b.shop_id = ? AND b.created_at < ?
       GROUP BY date(b.created_at)
       ORDER BY day DESC
