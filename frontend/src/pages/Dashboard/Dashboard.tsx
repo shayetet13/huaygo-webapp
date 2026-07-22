@@ -105,6 +105,8 @@ export default function Dashboard() {
   const [showExpiryModal, setShowExpiryModal] = useState(false)
   const [liffCopied,      setLiffCopied]      = useState(false)
 
+  const dateInputRef = useRef<HTMLInputElement>(null)
+
   const authHeaders = useCallback(
     (): HeadersInit => ({ Authorization: `Bearer ${token}` }),
     [token],
@@ -245,14 +247,26 @@ export default function Dashboard() {
                 ← กลับวันนี้
               </button>
             )}
-            <label className={`admdb-date-picker${isToday ? '' : ' viewing-past'}`} title="ดูรายงานย้อนหลัง — คลิกเพื่อเลือกวันที่">
+            <label
+              className={`admdb-date-picker${isToday ? '' : ' viewing-past'}`}
+              title="ดูรายงานย้อนหลัง — คลิกเพื่อเลือกวันที่"
+              onClick={(e) => {
+                /* บาง browser (เช่น Firefox) เปิดปฏิทินเฉพาะตอนคลิกไอคอนเล็กๆ ของ input เท่านั้น
+                 * ทั้งที่ input ถูกยืดคลุมเต็มปุ่มแบบไม่โชว์ — สั่ง showPicker() ตรงๆ กันคลิกจุดอื่นแล้วเหมือนกดไม่ติด
+                 * (ถ้า browser ไม่รองรับ showPicker ปล่อยให้ label ส่งคลิกต่อให้ input ตามปกติ) */
+                if (typeof dateInputRef.current?.showPicker === 'function') {
+                  e.preventDefault()
+                  dateInputRef.current.showPicker()
+                }
+              }}
+            >
               <span className="admdb-date-picker-hint">ดูรายงานย้อนหลัง</span>
               <span className="admdb-date-picker-value">
                 <span>📅</span>
                 <span>{thaiDateLabel(date)}</span>
                 <span className="admdb-date-picker-caret">▾</span>
               </span>
-              <input type="date" value={date} max={todayIso()} onChange={(e) => changeDate(e.target.value)} />
+              <input ref={dateInputRef} type="date" value={date} max={todayIso()} onChange={(e) => changeDate(e.target.value)} />
             </label>
             <button
               type="button"
@@ -285,8 +299,20 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Stats Cards */}
+        {/* Stats Cards — ยอดเงินรวมเป็น hero การ์ดใหญ่ที่สุด (ตัวเลขธุรกิจหลัก) การ์ดอื่นเป็นข้อมูลรอง */}
         <div className="admdb-stats-grid">
+          <div className="admdb-stat-card admdb-stat-hero">
+            <div className="admdb-stat-top">
+              <div className="admdb-stat-icon icon-blue">💰</div>
+              <div className="admdb-stat-label">ยอดเงินรวม</div>
+            </div>
+            <div className="admdb-stat-value">{overview ? formatMoneyShort(overview.today.totalBet) : '–'}</div>
+            <div className="admdb-stat-unit">บาท · {dayLabel}</div>
+            <div className="admdb-stat-foot">
+              <span>เดือนนี้</span>
+              <span className="up">{overview ? formatMoneyShort(overview.month.totalBet) : '–'} บาท</span>
+            </div>
+          </div>
           <div className="admdb-stat-card">
             <div className="admdb-stat-top">
               <div className="admdb-stat-icon icon-green">📩</div>
@@ -297,18 +323,6 @@ export default function Dashboard() {
             <div className="admdb-stat-foot">
               <span>{dayLabel}</span>
               <span className="up">{overview ? overview.today.betCount.toLocaleString() : '–'} โพย</span>
-            </div>
-          </div>
-          <div className="admdb-stat-card">
-            <div className="admdb-stat-top">
-              <div className="admdb-stat-icon icon-blue">💰</div>
-              <div className="admdb-stat-label">ยอดเงินรวม</div>
-            </div>
-            <div className="admdb-stat-value">{overview ? formatMoneyShort(overview.today.totalBet) : '–'}</div>
-            <div className="admdb-stat-unit">บาท</div>
-            <div className="admdb-stat-foot">
-              <span>เดือนนี้</span>
-              <span className="up">{overview ? formatMoneyShort(overview.month.totalBet) : '–'} บาท</span>
             </div>
           </div>
           <div className="admdb-stat-card">

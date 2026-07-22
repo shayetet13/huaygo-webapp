@@ -31,6 +31,7 @@
   border-radius: var(--db-radius);
   padding: 18px 20px;
   margin-bottom: 12px;
+  box-shadow: var(--db-shadow-1, none);
 }
 .cdet-profile-avatar { flex-shrink: 0; border: 1px solid var(--db-border); border-radius: 50%; }
 .cdet-profile-info { min-width: 0; }
@@ -49,7 +50,10 @@
   border: 1px solid var(--db-border);
   border-radius: var(--db-radius);
   padding: 13px 16px;
+  box-shadow: var(--db-shadow-1, none);
+  transition: transform 0.15s var(--db-ease, ease), box-shadow 0.15s var(--db-ease, ease);
 }
+.cdet-stat:hover { transform: translateY(-2px); box-shadow: var(--db-shadow-2, var(--db-shadow-1, none)); }
 .cdet-stat-label { color: var(--db-text-2); font-size: 12px; font-weight: 500; margin-bottom: 4px; }
 .cdet-stat-value { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; font-variant-numeric: tabular-nums; }
 .cdet-stat-win .cdet-stat-value { color: var(--db-green); }
